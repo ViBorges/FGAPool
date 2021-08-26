@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "577000861442",
+    "project_id": "fga-pool",
+    "storage_bucket": "fga-pool.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577000861442:android:51398c6011e161be6b5c1b",
+        "android_client_info": {
+          "package_name": "com.tcc.fgapool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "577000861442-eok56j6815m6fjek1kufvpmj6bafq0ki.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABMmRkhlT7Wz3vlCqQjk_UZh7Gl6PpP0w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "577000861442-eok56j6815m6fjek1kufvpmj6bafq0ki.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
