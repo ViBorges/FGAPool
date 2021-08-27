@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "577000861442",
+    "firebase_url": "https://fga-pool-default-rtdb.firebaseio.com",
     "project_id": "fga-pool",
     "storage_bucket": "fga-pool.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "577000861442-trjjofnn4e20376t00b3vek0aufv85pn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tcc.fgapool",
+            "certificate_hash": "e90dca29bf90dc84b025059aa4f9eda228fdd8b4"
+          }
+        },
         {
           "client_id": "577000861442-eok56j6815m6fjek1kufvpmj6bafq0ki.apps.googleusercontent.com",
           "client_type": 3
