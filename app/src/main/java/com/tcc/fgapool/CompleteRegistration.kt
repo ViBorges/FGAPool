@@ -8,9 +8,12 @@ import androidx.appcompat.widget.SwitchCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.squareup.picasso.Picasso
+import com.tcc.fgapool.databinding.ActivityCompleteRegistrationBinding
 import com.tcc.fgapool.utils.CircleTransformation
 
 class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+
+    private lateinit var binding: ActivityCompleteRegistrationBinding
 
     private lateinit var carPlate : EditText
     private lateinit var carModel : EditText
@@ -18,15 +21,17 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_complete_registration)
+        binding = ActivityCompleteRegistrationBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        val spinner: Spinner = findViewById(R.id.spinner)
-        val switch: SwitchCompat = findViewById(R.id.isDriver)
-        val nameTextView : TextView = findViewById(R.id.personName)
-        val profilePicture : ImageView = findViewById(R.id.profilePicture)
-        carPlate = findViewById(R.id.carPlate)
-        carModel = findViewById(R.id.carModel)
-        carColor = findViewById(R.id.carColor)
+        val spinner: Spinner = binding.spinner
+        val switch: SwitchCompat = binding.isDriver
+        val nameTextView : TextView = binding.personName
+        val profilePicture : ImageView = binding.profilePicture
+        carPlate = binding.carPlate
+        carModel = binding.carModel
+        carColor = binding.carColor
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter.createFromResource(
@@ -49,6 +54,7 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
             .load(currentUser.photoUrl)
             .transform(CircleTransformation())
             .into(profilePicture)
+
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
