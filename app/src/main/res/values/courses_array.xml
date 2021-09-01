@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="courses_array">
+        <item>Curso</item>
         <item>Engenharia Aeroespacial</item>
         <item>Engenharia Automotiva</item>
         <item>Engenharia de Energia</item>

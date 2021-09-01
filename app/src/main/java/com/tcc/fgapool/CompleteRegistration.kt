@@ -1,12 +1,14 @@
 package com.tcc.fgapool
 
-import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.view.isVisible
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.squareup.picasso.Picasso
+import com.tcc.fgapool.utils.CircleTransformation
 
 class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
@@ -20,9 +22,12 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
 
         val spinner: Spinner = findViewById(R.id.spinner)
         val switch: SwitchCompat = findViewById(R.id.isDriver)
+        val nameTextView : TextView = findViewById(R.id.personName)
+        val profilePicture : ImageView = findViewById(R.id.profilePicture)
         carPlate = findViewById(R.id.carPlate)
         carModel = findViewById(R.id.carModel)
         carColor = findViewById(R.id.carColor)
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter.createFromResource(
             this,
@@ -37,6 +42,13 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
 
         switch.setOnCheckedChangeListener(this)
         spinner.onItemSelectedListener = this
+
+        val currentUser : GoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
+        nameTextView.text = currentUser.displayName
+        Picasso.get()
+            .load(currentUser.photoUrl)
+            .transform(CircleTransformation())
+            .into(profilePicture)
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
@@ -66,5 +78,4 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
 
     }
-
 }
