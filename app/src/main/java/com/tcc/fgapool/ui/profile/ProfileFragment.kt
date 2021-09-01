@@ -81,6 +81,7 @@ class ProfileFragment : Fragment() {
     private fun updateUI() {
         val intent = Intent(context, GoogleAuthLogin::class.java)
         startActivity(intent)
+        activity?.finish()
     }
 
     override fun onDestroyView() {

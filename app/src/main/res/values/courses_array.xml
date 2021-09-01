@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="courses_array">
+        <item>Engenharia Aeroespacial</item>
+        <item>Engenharia Automotiva</item>
+        <item>Engenharia de Energia</item>
+        <item>Engenharia de Software</item>
+        <item>Engenharia Eletrônica</item>
+    </string-array>
+</resources>
