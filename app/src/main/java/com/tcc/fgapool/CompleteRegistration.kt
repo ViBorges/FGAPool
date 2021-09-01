@@ -25,31 +25,28 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
         val view = binding.root
         setContentView(view)
 
-        val spinner: Spinner = binding.spinner
-        val switch: SwitchCompat = binding.isDriver
-        val nameTextView : TextView = binding.personName
+        //View objects
+        val courseDropdown: Spinner = binding.courseDropdown
+        val genderDropdown: Spinner = binding.genderDropdown
+        val isDriverSwitch: SwitchCompat = binding.isDriver
+        val profileName : TextView = binding.profileName
         val profilePicture : ImageView = binding.profilePicture
         carPlate = binding.carPlate
         carModel = binding.carModel
         carColor = binding.carColor
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.courses_array,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
-            spinner.adapter = adapter
-        }
+        spinnerAdapter(courseDropdown, R.array.courses_array)
+        spinnerAdapter(genderDropdown, R.array.gender_array)
 
-        switch.setOnCheckedChangeListener(this)
-        spinner.onItemSelectedListener = this
+        //Listeners
+        isDriverSwitch.setOnCheckedChangeListener(this)
+        courseDropdown.onItemSelectedListener = this
+        genderDropdown.onItemSelectedListener = this
 
+        //Profile picture and name setting
         val currentUser : GoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
-        nameTextView.text = currentUser.displayName
+        profileName.text = currentUser.displayName
         Picasso.get()
             .load(currentUser.photoUrl)
             .transform(CircleTransformation())
@@ -60,7 +57,7 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
     override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
             // An item was selected. You can retrieve the selected item using
             // parent.getItemAtPosition(pos)
-        Toast.makeText(this, parent.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show()
+            parent.getItemAtPosition(pos).toString()
 
     }
 
@@ -70,18 +67,29 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         if (isChecked){
+
             carPlate.visibility = View.VISIBLE
             carModel.visibility = View.VISIBLE
             carColor.visibility = View.VISIBLE
-
-            //Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
         } else {
+
             carPlate.visibility = View.GONE
             carModel.visibility = View.GONE
             carColor.visibility = View.GONE
-
-            //Toast.makeText(this, "Unchecked", Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    private fun spinnerAdapter(spinner:Spinner, arrayRes:Int){
+        ArrayAdapter.createFromResource(
+            this,
+            arrayRes,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            spinner.adapter = adapter
+        }
     }
 }
