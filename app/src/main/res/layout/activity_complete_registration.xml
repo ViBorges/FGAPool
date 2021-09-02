@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:background="#006978"
     tools:context=".CompleteRegistration">
 
     <androidx.cardview.widget.CardView
@@ -12,12 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,17 +25,26 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/editTextMatricula"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="85dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Matrícula ex: 150151225"
-                android:inputType="number"
-                android:textSize="16sp" />
+                android:layout_marginBottom="5dp"
+                android:hint="Matrícula"
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_vpn_key">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextMatricula"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:maxLength="9" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
                 android:id="@+id/courseDropdown"
@@ -49,75 +58,110 @@
                 android:id="@+id/genderDropdown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:spinnerMode="dropdown"/>
+                android:spinnerMode="dropdown" />
 
-            <EditText
-                android:id="@+id/editTextPhone"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
-                android:ems="10"
-                android:hint="Telefone ex: 61982359894"
-                android:inputType="phone"
-                android:textSize="16sp" />
+                android:hint="Telefone"
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_phone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:maxLength="11" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/isDriver"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="5dp"
                 android:text=" Motorista"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/carPlate"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/carPlateLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:ems="10"
-                android:hint="Placa ex: QJJ-8459"
-                android:inputType="textPersonName"
-                android:textSize="16sp"
+                android:hint="Placa"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_baseline_directions_car_24"
+                tools:visibility="visible">
 
-            <EditText
-                android:id="@+id/carModel"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/carPlate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="7" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/carModelLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:ems="10"
-                android:hint="Modelo ex: Gol"
-                android:inputType="textPersonName"
-                android:textSize="16sp"
+
+                android:hint="Modelo"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_baseline_directions_car_24"
+                tools:visibility="visible">
 
-            <EditText
-                android:id="@+id/carColor"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/carModel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="15" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/carColorLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
+
                 android:layout_marginBottom="20dp"
-                android:ems="10"
-                android:hint="Cor ex: Vermelho"
-                android:inputType="textPersonName"
-                android:textSize="16sp"
+                android:hint="Cor"
                 android:visibility="gone"
-                tools:visibility="visible" />
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_baseline_directions_car_24"
+                tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/carColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="15" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -126,40 +170,43 @@
         android:id="@+id/profilePicture"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:alpha="100"
         android:elevation="2dp"
+        android:padding="1dp"
         android:src="@drawable/ic_baseline_account_circle_24"
         app:layout_constraintBottom_toTopOf="@+id/cardViewForm"
         app:layout_constraintEnd_toEndOf="parent"
-        android:alpha="100"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cardViewForm">
-    </ImageView>
+        app:layout_constraintTop_toTopOf="@+id/cardViewForm" />
 
     <TextView
         android:id="@+id/profileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
         android:elevation="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Nome Sobrenome"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/profilePicture"
-        android:text="Nome Sobrenome">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePicture">
 
     </TextView>
 
     <Button
         android:id="@+id/buttonSend"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_btn"
+        android:backgroundTint="@color/teal_200"
         android:text="Enviar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewForm" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -16,19 +17,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedListener,
-    CompoundButton.OnCheckedChangeListener {
+class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChangeListener {
 
     private lateinit var binding: ActivityCompleteRegistrationBinding
 
-    private lateinit var carPlate : EditText
-    private lateinit var carModel : EditText
-    private lateinit var carColor : EditText
+    private lateinit var carPlateLayout: TextInputLayout
+    private lateinit var carModelLayout: TextInputLayout
+    private lateinit var carColorLayout: TextInputLayout
 
-    private var isDriver : Boolean = false
+    private var isDriver: Boolean = false
 
-    private lateinit var database:FirebaseDatabase
-    private lateinit var databaseRef:DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var databaseRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,20 +41,23 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
 
         //Database reference
         database = Firebase.database
-        databaseRef = database.getReference("signup_info/"+currentFirebaseUser?.uid)
+        databaseRef = database.getReference("signup_info/" + currentFirebaseUser?.uid)
 
         //View objects
         val courseDropdown: Spinner = binding.courseDropdown
         val genderDropdown: Spinner = binding.genderDropdown
         val isDriverSwitch: SwitchCompat = binding.isDriver
-        val profileName : TextView = binding.profileName
-        val profilePicture : ImageView = binding.profilePicture
-        val sendButton : Button = binding.buttonSend
-        val registrationNumber : EditText = binding.editTextMatricula
-        val phoneNumber : EditText = binding.editTextPhone
-        carPlate = binding.carPlate
-        carModel = binding.carModel
-        carColor = binding.carColor
+        val profileName: TextView = binding.profileName
+        val profilePicture: ImageView = binding.profilePicture
+        val sendButton: Button = binding.buttonSend
+        val registrationNumber: EditText = binding.editTextMatricula
+        val phoneNumber: EditText = binding.editTextPhone
+        val carPlate: EditText = binding.carPlate
+        val carModel: EditText = binding.carModel
+        val carColor: EditText = binding.carColor
+        carPlateLayout = binding.carPlateLayout
+        carModelLayout = binding.carModelLayout
+        carColorLayout = binding.carColorLayout
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         spinnerAdapter(courseDropdown, R.array.courses_array)
@@ -62,11 +65,9 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
 
         //Listeners
         isDriverSwitch.setOnCheckedChangeListener(this)
-        courseDropdown.onItemSelectedListener = this
-        genderDropdown.onItemSelectedListener = this
 
         //Profile picture and name setting
-        val currentUser : GoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
+        val currentUser: GoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
         profileName.text = currentUser.displayName
         Picasso.get()
             .load(currentUser.photoUrl)
@@ -74,7 +75,7 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
             .into(profilePicture)
 
         sendButton.setOnClickListener {
-            if (isDriver){
+            if (isDriver) {
                 databaseRef.child("registrationNumber").setValue(registrationNumber.text.toString())
                 databaseRef.child("course").setValue(courseDropdown.selectedItem.toString())
                 databaseRef.child("gender").setValue(genderDropdown.selectedItem.toString())
@@ -97,36 +98,26 @@ class CompleteRegistration : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     }
 
-    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        parent.getItemAtPosition(pos).toString()
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>) {
-            // Another interface callback
-    }
-
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        if (isChecked){
+        if (isChecked) {
 
-            carPlate.visibility = View.VISIBLE
-            carModel.visibility = View.VISIBLE
-            carColor.visibility = View.VISIBLE
+            carPlateLayout.visibility = View.VISIBLE
+            carModelLayout.visibility = View.VISIBLE
+            carColorLayout.visibility = View.VISIBLE
             isDriver = true
 
         } else {
 
-            carPlate.visibility = View.GONE
-            carModel.visibility = View.GONE
-            carColor.visibility = View.GONE
+            carPlateLayout.visibility = View.GONE
+            carModelLayout.visibility = View.GONE
+            carColorLayout.visibility = View.GONE
             isDriver = false
 
         }
 
     }
 
-    private fun spinnerAdapter(spinner:Spinner, arrayRes:Int){
+    private fun spinnerAdapter(spinner: Spinner, arrayRes: Int) {
         ArrayAdapter.createFromResource(
             this,
             arrayRes,
