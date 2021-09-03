@@ -33,6 +33,7 @@
                 android:layout_marginTop="80dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
+                app:helperText="Ex:150151229"
                 android:hint="Matrícula"
                 app:endIconMode="clear_text"
                 app:startIconDrawable="@drawable/ic_vpn_key">
@@ -71,6 +72,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Telefone"
+                app:helperText="Ex: 61982319894"
                 app:endIconMode="clear_text"
                 app:startIconDrawable="@drawable/ic_phone">
 
@@ -102,6 +104,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Placa"
+                app:helperText="Ex: QQJ7899"
                 android:visibility="gone"
                 app:endIconMode="clear_text"
                 app:startIconDrawable="@drawable/ic_baseline_directions_car_24"
@@ -135,7 +138,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:maxLength="15" />
+                    android:maxLength="20" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -159,7 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    android:maxLength="15" />
+                    android:maxLength="20" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
