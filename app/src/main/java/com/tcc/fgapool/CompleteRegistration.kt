@@ -69,16 +69,16 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
         isDriverSwitch.setOnCheckedChangeListener(this)
 
         //Profile picture and name setting
-        val currentUser: GoogleSignInAccount = GoogleSignIn.getLastSignedInAccount(this)
-        profileName.text = currentUser.displayName
+        val currentUser: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(this)
+        profileName.text = currentUser?.displayName
         Picasso.get()
-            .load(currentUser.photoUrl)
+            .load(currentUser?.photoUrl)
             .transform(CircleTransformation())
             .into(profilePicture)
 
         sendButton.setOnClickListener {
             if (isDriver){
-                if (checkDriverInputs(registrationNumber, phoneNumber, carPlate, carModel, carColor, courseDropdown, genderDropdown)){
+                if (checkDriverInputs(carPlate, carModel, carColor) || checkPassengerInputs(registrationNumber, phoneNumber, courseDropdown, genderDropdown)){
                     alertDialog()
                 } else {
                     databaseRef.child("registrationNumber").setValue(registrationNumber.text.toString())
@@ -104,14 +104,9 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
         }
     }
 
-    private fun checkDriverInputs(registrationNumber:EditText, phoneNumber:EditText, carPlate:EditText,
-                                  carModel:EditText, carColor:EditText, courseDropdown:Spinner,
-                                  genderDropdown:Spinner) : Boolean{
+    private fun checkDriverInputs(carPlate:EditText, carModel:EditText, carColor:EditText) : Boolean{
 
-        return isLessThan(registrationNumber, 9) || isLessThan(phoneNumber, 11) ||
-                isLessThan(carPlate, 7) || isEmpty(carModel) || isEmpty(carColor) ||
-                spinnerAtZeroPos(courseDropdown) || spinnerAtZeroPos(genderDropdown)
-
+        return isLessThan(carPlate, 7) || isEmpty(carModel) || isEmpty(carColor)
     }
 
     private fun checkPassengerInputs(registrationNumber:EditText, phoneNumber:EditText,
@@ -119,7 +114,6 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
 
         return spinnerAtZeroPos(courseDropdown) || spinnerAtZeroPos(genderDropdown) ||
                 isLessThan(registrationNumber, 9) || isLessThan(phoneNumber, 11)
-
 
     }
 
