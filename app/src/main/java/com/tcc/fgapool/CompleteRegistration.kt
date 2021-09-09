@@ -1,6 +1,7 @@
 package com.tcc.fgapool
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -90,6 +91,7 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
                     databaseRef.child("carModel").setValue(carModel.text.toString())
                     databaseRef.child("carColor").setValue(carColor.text.toString())
                     databaseRef.child("registrationComplete").setValue(true)
+                    updateUI()
                 }
             } else if (checkPassengerInputs(registrationNumber, phoneNumber, courseDropdown, genderDropdown)){
                 alertDialog()
@@ -100,8 +102,15 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
                 databaseRef.child("phoneNumber").setValue(phoneNumber.text.toString())
                 databaseRef.child("isDriver").setValue(isDriver)
                 databaseRef.child("registrationComplete").setValue(true)
+                updateUI()
             }
         }
+    }
+
+    private fun updateUI(){
+        val intent = Intent(this, BottomNavigation::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun checkDriverInputs(carPlate:EditText, carModel:EditText, carColor:EditText) : Boolean{

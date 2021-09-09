@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -13,7 +14,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.util.*
+import kotlin.properties.Delegates
 
 class GoogleAuthLogin : AppCompatActivity() {
 
@@ -37,13 +42,15 @@ class GoogleAuthLogin : AppCompatActivity() {
         loginButton.setOnClickListener {
             signIn()
         }
+
     }
 
     override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
+
         val currentUser = auth.currentUser
-        updateUI(currentUser)
+        hasRegistered(currentUser)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -72,7 +79,8 @@ class GoogleAuthLogin : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
-                    updateUI(user)
+                    //updateUI(user)
+                    hasRegistered(user)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -92,6 +100,38 @@ class GoogleAuthLogin : AppCompatActivity() {
             startActivity(intent)
             finish()
             }
+    }
+
+    private fun hasRegistered(user: FirebaseUser?){
+        val currentUser = auth.currentUser
+        var intent: Intent
+        var isRegistrationCompleted: Boolean?
+        val database: FirebaseDatabase = Firebase.database
+        val databaseRef: DatabaseReference = database.getReference("signup_info/" + currentUser?.uid)
+
+        databaseRef.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                isRegistrationCompleted = snapshot.child("registrationComplete").value as Boolean?
+
+                if (user!=null) {
+                    if (isRegistrationCompleted == true){
+                        intent = Intent(baseContext, BottomNavigation::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else{
+                        intent = Intent(baseContext, CompleteRegistration::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(baseContext, "Não foi possível recuperar o dados, cheque sua internet e tente novamente.", Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
     companion object {
