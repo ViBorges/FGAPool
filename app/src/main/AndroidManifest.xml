@@ -10,10 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FGAPool">
         <activity
+            android:name=".SplashScreen"
+            android:exported="true"
+            android:theme="@style/Theme.SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".OfferRide"
+            android:exported="true" />
+        <activity
             android:name=".CompleteRegistration"
             android:exported="true"
-            android:theme="@style/Theme.Registration">
-        </activity>
+            android:theme="@style/Theme.Registration" />
         <activity
             android:name=".BottomNavigation"
             android:exported="true"
@@ -21,11 +33,6 @@
         <activity
             android:name=".GoogleAuthLogin"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"

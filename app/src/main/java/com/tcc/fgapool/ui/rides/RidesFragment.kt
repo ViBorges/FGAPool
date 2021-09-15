@@ -1,5 +1,6 @@
 package com.tcc.fgapool.ui.rides
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.tasks.OnCompleteListener
+import com.tcc.fgapool.OfferRide
 import com.tcc.fgapool.databinding.FragmentRidesBinding
 
 class RidesFragment : Fragment() {
@@ -38,7 +40,7 @@ class RidesFragment : Fragment() {
         })*/
 
         binding.fab.setOnClickListener {
-            Toast.makeText(context, "Deslogado", Toast.LENGTH_SHORT).show()
+            updateUI()
         }
 
         return root
@@ -47,5 +49,10 @@ class RidesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun updateUI(){
+        val intent = Intent(context, OfferRide::class.java)
+        startActivity(intent)
     }
 }
