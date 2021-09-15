@@ -19,7 +19,7 @@ class SplashScreen : AppCompatActivity() {
         val contentContainer : LinearLayout = binding.linearLayout
 
         contentContainer.alpha = 0f
-        contentContainer.animate().setDuration(2000).alpha(1f).withEndAction {
+        contentContainer.animate().setDuration(1000).alpha(1f).withEndAction {
             val i = Intent(this, GoogleAuthLogin::class.java)
             startActivity(i)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

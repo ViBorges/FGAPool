@@ -1,10 +1,15 @@
 package com.tcc.fgapool
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -17,6 +22,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.tcc.fgapool.databinding.ActivityGoogleAuthLoginBinding
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -24,10 +30,18 @@ class GoogleAuthLogin : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var binding: ActivityGoogleAuthLoginBinding
+    private lateinit var progressBar: ProgressBar
+    private lateinit var loginButton: Button
+    private var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_google_auth_login)
+        binding = ActivityGoogleAuthLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        progressBar = binding.progressBarLogin
+        loginButton = binding.btnLogin
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("577000861442-eok56j6815m6fjek1kufvpmj6bafq0ki.apps.googleusercontent.com")
@@ -38,7 +52,6 @@ class GoogleAuthLogin : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        val loginButton : Button = findViewById(R.id.btn_login)
         loginButton.setOnClickListener {
             signIn()
         }
@@ -84,6 +97,7 @@ class GoogleAuthLogin : AppCompatActivity() {
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show()
                     updateUI(null)
                 }
             }
@@ -92,6 +106,8 @@ class GoogleAuthLogin : AppCompatActivity() {
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
+        progressBar.visibility = View.VISIBLE
+        loginButton.visibility = View.GONE
     }
 
     private fun updateUI(user: FirebaseUser?) {
@@ -117,13 +133,18 @@ class GoogleAuthLogin : AppCompatActivity() {
                     if (isRegistrationCompleted == true){
                         intent = Intent(baseContext, BottomNavigation::class.java)
                         startActivity(intent)
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                         finish()
                     } else{
                         intent = Intent(baseContext, CompleteRegistration::class.java)
                         startActivity(intent)
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                         finish()
                     }
 
+                } else {
+                    progressBar.visibility = View.GONE
+                    loginButton.visibility = View.VISIBLE
                 }
             }
 
@@ -137,5 +158,17 @@ class GoogleAuthLogin : AppCompatActivity() {
     companion object {
         private const val TAG = "GoogleActivity"
         private const val RC_SIGN_IN = 9001
+    }
+
+    override fun onBackPressed(){
+        progressBar.visibility = View.GONE
+        loginButton.visibility = View.VISIBLE
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Clique novamente para sair.", Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 3000)
     }
 }

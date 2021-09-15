@@ -32,7 +32,8 @@
             android:label="@string/title_activity_bottom_navigation" />
         <activity
             android:name=".GoogleAuthLogin"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.FGAPool.NoActionBar">
         </activity>
         <activity
             android:name=".MainActivity"
