@@ -16,12 +16,12 @@
 
     <style name="Theme.Registration" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#0097a7</item>
-        <item name="colorPrimaryVariant">#006978</item>
+        <item name="colorPrimary">#055429</item>
+        <item name="colorPrimaryVariant">#04391C</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">#055429</item>
+        <item name="colorSecondaryVariant">#04391C</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
