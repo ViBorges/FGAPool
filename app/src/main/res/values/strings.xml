@@ -3,6 +3,8 @@
     <string name="title_activity_bottom_navigation">BottomNavigation</string>
     <string name="title_home">Perfil</string>
     <string name="title_dashboard">Caronas</string>
-    <string name="title_notifications">Notificações</string>
+    <string name="welcome">Bem Vindo</string>
+    <string name="welcome_helper">Entre para continuar</string>
+    <string name="sign_in_with_google">Entrar com o Google</string>
     <!--<string name="default_web_client_id" translatable="false">577000861442-eok56j6815m6fjek1kufvpmj6bafq0ki.apps.googleusercontent.com</string>-->
 </resources>
