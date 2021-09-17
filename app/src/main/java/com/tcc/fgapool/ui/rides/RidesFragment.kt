@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.tasks.OnCompleteListener
+import com.tcc.fgapool.MapsActivity
 import com.tcc.fgapool.OfferRide
 import com.tcc.fgapool.databinding.FragmentRidesBinding
 
@@ -52,7 +53,7 @@ class RidesFragment : Fragment() {
     }
 
     private fun updateUI(){
-        val intent = Intent(context, OfferRide::class.java)
+        val intent = Intent(context, MapsActivity::class.java)
         startActivity(intent)
     }
 }
