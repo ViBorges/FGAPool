@@ -45,7 +45,8 @@
         </activity>
         <activity
             android:name=".OfferRide"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.FGAPool.NoActionBar"/>
         <activity
             android:name=".CompleteRegistration"
             android:exported="true"

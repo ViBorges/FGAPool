@@ -53,7 +53,7 @@ class RidesFragment : Fragment() {
     }
 
     private fun updateUI(){
-        val intent = Intent(context, MapsActivity::class.java)
+        val intent = Intent(context, OfferRide::class.java)
         startActivity(intent)
     }
 }
