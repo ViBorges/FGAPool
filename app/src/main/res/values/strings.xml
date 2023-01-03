@@ -11,4 +11,5 @@
     <!--<string name="default_web_client_id" translatable="false">577000861442-eok56j6815m6fjek1kufvpmj6bafq0ki.apps.googleusercontent.com</string>-->
     <string name="DB_on_send_success">Cadastrado com sucesso!</string>
     <string name="DB_on_send_failure">Não foi possível enviar os dados, tente novamente!</string>
+    <string name="add">add</string>
 </resources>

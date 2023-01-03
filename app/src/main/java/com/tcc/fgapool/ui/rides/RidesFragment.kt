@@ -1,19 +1,19 @@
 package com.tcc.fgapool.ui.rides
 
+import android.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.tasks.OnCompleteListener
-import com.tcc.fgapool.MapsActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.tcc.fgapool.OfferRide
+import com.tcc.fgapool.OfferRideAdapter
 import com.tcc.fgapool.databinding.FragmentRidesBinding
+import com.tcc.fgapool.models.RideItem
+
 
 class RidesFragment : Fragment() {
 
@@ -30,7 +30,7 @@ class RidesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         ridesViewModel =
-            ViewModelProvider(this).get(RidesViewModel::class.java)
+            ViewModelProvider(this)[RidesViewModel::class.java]
 
         _binding = FragmentRidesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -40,11 +40,40 @@ class RidesFragment : Fragment() {
             textView.text = it
         })*/
 
+        val recyclerView = binding.rideRecyclerview
+        recyclerView.adapter = OfferRideAdapter(rides())
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layoutManager
+
+
         binding.fab.setOnClickListener {
             updateUI()
         }
 
         return root
+    }
+
+    private fun rides(): List<RideItem> {
+        return listOf(
+            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
+                "Vinicius B.", "Eng. de Software", "2"),
+            RideItem("FGA", "Taguatinga", "04/01/2023", "16:00",
+                "Andreia", "Eng. de Energia", "0"),
+            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
+                "Vinicius B.", "Eng. de Software", "2"),
+            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
+                "Vinicius B.", "Eng. de Software", "2"),
+            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
+                "Vinicius B.", "Eng. de Software", "2"),
+            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
+                "Vinicius B.", "Eng. de Software", "2"),
+            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
+                "Vinicius B.", "Eng. de Software", "2"),
+            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
+                "Vinicius B.", "Eng. de Software", "2"),
+            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
+                "Vinicius B.", "Eng. de Software", "2"),
+        )
     }
 
     override fun onDestroyView() {

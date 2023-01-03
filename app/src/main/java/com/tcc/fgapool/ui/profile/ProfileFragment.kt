@@ -58,7 +58,7 @@ class ProfileFragment : Fragment() {
             .requestEmail()
             .build()
 
-        googleSignInClient = GoogleSignIn.getClient(context, gso)
+        googleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }!!
         auth = Firebase.auth
 
         binding.btnLogout2.setOnClickListener {

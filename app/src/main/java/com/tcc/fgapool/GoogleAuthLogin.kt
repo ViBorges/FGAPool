@@ -66,6 +66,7 @@ class GoogleAuthLogin : AppCompatActivity() {
 
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -160,6 +161,7 @@ class GoogleAuthLogin : AppCompatActivity() {
         private const val RC_SIGN_IN = 9001
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed(){
         progressBar.visibility = View.GONE
         loginButton.visibility = View.VISIBLE
