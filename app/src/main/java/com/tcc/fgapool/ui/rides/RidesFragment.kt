@@ -1,17 +1,26 @@
 package com.tcc.fgapool.ui.rides
 
-import android.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.tcc.fgapool.OfferRide
 import com.tcc.fgapool.OfferRideAdapter
 import com.tcc.fgapool.databinding.FragmentRidesBinding
+import com.tcc.fgapool.models.Ride
 import com.tcc.fgapool.models.RideItem
 
 
@@ -24,26 +33,41 @@ class RidesFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var database: FirebaseDatabase
+    private lateinit var databaseRef: DatabaseReference
+
+    private lateinit var origin: String
+    private lateinit var destination: String
+    private lateinit var date: String
+    private lateinit var time: String
+    private lateinit var driverName: String
+    private lateinit var driverCourse: String
+    private lateinit var seatsAvailable: String
+
+    //private lateinit var nothingToShow: LinearLayout
+
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         ridesViewModel =
             ViewModelProvider(this)[RidesViewModel::class.java]
 
         _binding = FragmentRidesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        /*val textView: TextView = binding.textDashboard
-        ridesViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })*/
+        //Database reference
+        database = Firebase.database
+        databaseRef = database.getReference("rides/")
 
-        val recyclerView = binding.rideRecyclerview
-        recyclerView.adapter = OfferRideAdapter(rides())
+        //Set RecyclerView
+        recyclerView = binding.rideRecyclerview
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
+        recoverRideData()
 
 
         binding.fab.setOnClickListener {
@@ -53,27 +77,37 @@ class RidesFragment : Fragment() {
         return root
     }
 
-    private fun rides(): List<RideItem> {
-        return listOf(
-            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
-                "Vinicius B.", "Eng. de Software", "2"),
-            RideItem("FGA", "Taguatinga", "04/01/2023", "16:00",
-                "Andreia", "Eng. de Energia", "0"),
-            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
-                "Vinicius B.", "Eng. de Software", "2"),
-            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
-                "Vinicius B.", "Eng. de Software", "2"),
-            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
-                "Vinicius B.", "Eng. de Software", "2"),
-            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
-                "Vinicius B.", "Eng. de Software", "2"),
-            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
-                "Vinicius B.", "Eng. de Software", "2"),
-            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
-                "Vinicius B.", "Eng. de Software", "2"),
-            RideItem("Recanto das Emas", "FGA", "02/01/2023", "08:00",
-                "Vinicius B.", "Eng. de Software", "2"),
-        )
+
+    private fun recoverRideData(){
+
+        var rideList: List<RideItem> = emptyList()
+
+        databaseRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(ds: DataSnapshot in snapshot.children){
+                    origin = ds.child("origin").value as String
+                    destination = ds.child("destination").value as String
+                    date = ds.child("date").value as String
+                    time = ds.child("time").value as String
+                    seatsAvailable = ds.child("seatsAvailable").value as String
+
+                    rideList = rideList + listOf(
+                        RideItem(origin, destination, date, time, "crazy", "Soft", seatsAvailable)
+                    )
+
+                }
+
+                binding.nothingToShow.isVisible = rideList.isEmpty()
+                recyclerView.adapter = OfferRideAdapter(rideList.reversed())
+                rideList = emptyList()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
     }
 
     override fun onDestroyView() {

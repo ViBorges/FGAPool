@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.tcc.fgapool.models.RideItem
 
 class OfferRideAdapter(private val dataSet: List<RideItem>) :
-    RecyclerView.Adapter<OfferRideAdapter.ViewHolder>() {
+    Adapter<OfferRideAdapter.ViewHolder>() {
 
     /**
      * Provide a reference to the type of views that you are using
