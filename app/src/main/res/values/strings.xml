@@ -12,4 +12,6 @@
     <string name="DB_on_send_success">Cadastrado com sucesso!</string>
     <string name="DB_on_send_failure">Não foi possível enviar os dados, tente novamente!</string>
     <string name="add">add</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Deletar</string>
 </resources>

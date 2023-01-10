@@ -3,13 +3,19 @@ package com.tcc.fgapool
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.tcc.fgapool.models.Ride
 
-class OfferRideAdapter(private val dataSet: List<Ride>) :
+class OfferRideAdapter(private val dataSet: List<Ride>,
+                       private val optionsMenuClickListener: OptionsMenuClickListener) :
     Adapter<OfferRideAdapter.ViewHolder>() {
+
+    interface OptionsMenuClickListener {
+        fun onOptionsMenuClicked(position: Int)
+    }
 
     /**
      * Provide a reference to the type of views that you are using
@@ -24,6 +30,7 @@ class OfferRideAdapter(private val dataSet: List<Ride>) :
         val driverName: TextView
         //val driverCourse: TextView
         val seatsAvailable: TextView
+        val rideItemMenu: ImageView
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -35,6 +42,7 @@ class OfferRideAdapter(private val dataSet: List<Ride>) :
             driverName = view.findViewById(R.id.driverName)
             //driverCourse = view.findViewById(R.id.driverCourse)
             seatsAvailable = view.findViewById(R.id.seatsAvailable)
+            rideItemMenu = view.findViewById(R.id.rideItemMenu)
         }
     }
 
@@ -62,9 +70,14 @@ class OfferRideAdapter(private val dataSet: List<Ride>) :
         //viewHolder.driverCourse.text = dataSet[position].driverCourse
         viewHolder.seatsAvailable.text = dataSet[position].seatsAvailable
 
+        viewHolder.rideItemMenu.setOnClickListener {
+            optionsMenuClickListener.onOptionsMenuClicked(position)
+        }
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
 
 }
+

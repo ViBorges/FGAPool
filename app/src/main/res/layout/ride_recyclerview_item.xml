@@ -57,13 +57,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/imageView2" />-->
 
+
+    <ImageView
+        android:id="@+id/rideItemMenu"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_more_vert"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        app:layout_constraintEnd_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toTopOf="@+id/imageView2"
+        android:focusable="true" />
+
     <ImageView
         android:id="@+id/ic_person"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic__person"
+        android:src="@drawable/ic_person"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintStart_toStartOf="@+id/imageView2" />
 

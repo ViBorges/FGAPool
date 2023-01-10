@@ -3,8 +3,12 @@ package com.tcc.fgapool.ui.rides
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +21,7 @@ import com.tcc.fgapool.OfferRide
 import com.tcc.fgapool.OfferRideAdapter
 import com.tcc.fgapool.databinding.FragmentRidesBinding
 import com.tcc.fgapool.models.Ride
+import java.text.FieldPosition
 
 
 class RidesFragment : Fragment() {
@@ -94,7 +99,13 @@ class RidesFragment : Fragment() {
                 }
 
                 binding.nothingToShow.isVisible = rideList.isEmpty()
-                recyclerView.adapter = OfferRideAdapter(rideList.reversed())
+                recyclerView.adapter = OfferRideAdapter(rideList.reversed(),
+                    object: OfferRideAdapter.OptionsMenuClickListener{
+                    override fun onOptionsMenuClicked(position: Int) {
+                        performOptionsMenuClick(position)
+                    }
+
+                })
                 rideList = emptyList()
             }
 
@@ -105,6 +116,35 @@ class RidesFragment : Fragment() {
         })
 
     }
+
+    private fun performOptionsMenuClick(position: Int){
+
+        val popupMenu = PopupMenu(context , binding.rideRecyclerview[position].findViewById(com.tcc.fgapool.R.id.rideItemMenu))
+
+        popupMenu.inflate(com.tcc.fgapool.R.menu.ride_item_menu)
+
+        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener{
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                when(item?.itemId){
+                    com.tcc.fgapool.R.id.editRide -> {
+                        // here are the logic to delete an item from the list
+                        Toast.makeText(context , "edit clicked" , Toast.LENGTH_SHORT).show()
+                        return true
+                    }
+                    // in the same way you can implement others
+                    com.tcc.fgapool.R.id.deleteRide -> {
+                        // define
+                        Toast.makeText(context , "delete clicked" , Toast.LENGTH_SHORT).show()
+                        return true
+                    }
+
+                }
+                return false
+            }
+        })
+        popupMenu.show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
