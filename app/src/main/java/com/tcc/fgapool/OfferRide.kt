@@ -36,6 +36,7 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
     private lateinit var database: FirebaseDatabase
     private lateinit var databaseRef: DatabaseReference
     private lateinit var uid: String
+    private lateinit var driverName: String
 
     private var sameSexPassengers: Boolean = false
 
@@ -55,6 +56,7 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         //Firebase user reference
         val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
         uid = currentFirebaseUser?.uid.toString()
+        driverName = currentFirebaseUser?.displayName.toString()
 
         //Database reference
         database = Firebase.database
@@ -128,7 +130,7 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             } else {
                 writeNewRide(originEditText.text.toString(), destinationEditText.text.toString(),
                 routeEditText.text.toString(), dateEditText.text.toString(), timeEditText.text.toString(),
-                seatsEditText.text.toString(), sameSexPassengers, true, uid)
+                seatsEditText.text.toString(), sameSexPassengers, true, uid, driverName)
             }
         }
     }
@@ -163,7 +165,8 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         seatsAvailable: String,
         sameSexPassengers: Boolean,
         isActive: Boolean,
-        userId: String
+        userId: String,
+        driverName: String
     ) {
 
         val ride = Ride(
@@ -175,7 +178,8 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             seatsAvailable,
             sameSexPassengers,
             isActive,
-            userId
+            userId,
+            driverName
         )
 
         databaseRef.setValue(ride)

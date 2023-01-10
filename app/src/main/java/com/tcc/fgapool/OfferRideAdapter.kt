@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import com.tcc.fgapool.models.RideItem
+import com.tcc.fgapool.models.Ride
 
-class OfferRideAdapter(private val dataSet: List<RideItem>) :
+class OfferRideAdapter(private val dataSet: List<Ride>) :
     Adapter<OfferRideAdapter.ViewHolder>() {
 
     /**
@@ -22,7 +22,7 @@ class OfferRideAdapter(private val dataSet: List<RideItem>) :
         val date: TextView
         val time: TextView
         val driverName: TextView
-        val driverCourse: TextView
+        //val driverCourse: TextView
         val seatsAvailable: TextView
 
         init {
@@ -33,7 +33,7 @@ class OfferRideAdapter(private val dataSet: List<RideItem>) :
             date = view.findViewById(R.id.originDateText)
             time = view.findViewById(R.id.originTimeText)
             driverName = view.findViewById(R.id.driverName)
-            driverCourse = view.findViewById(R.id.driverCourse)
+            //driverCourse = view.findViewById(R.id.driverCourse)
             seatsAvailable = view.findViewById(R.id.seatsAvailable)
         }
     }
@@ -59,7 +59,7 @@ class OfferRideAdapter(private val dataSet: List<RideItem>) :
         viewHolder.date.text = dataSet[position].date
         viewHolder.time.text = dataSet[position].time
         viewHolder.driverName.text = dataSet[position].driverName
-        viewHolder.driverCourse.text = dataSet[position].driverCourse
+        //viewHolder.driverCourse.text = dataSet[position].driverCourse
         viewHolder.seatsAvailable.text = dataSet[position].seatsAvailable
 
     }

@@ -9,5 +9,6 @@ data class Ride(
     val seatsAvailable: String? = null,
     val sameSexPassengers: Boolean? = null,
     val isActive: Boolean? = null,
-    val userId: String? = null
+    val userId: String? = null,
+    val driverName: String? = null
 )

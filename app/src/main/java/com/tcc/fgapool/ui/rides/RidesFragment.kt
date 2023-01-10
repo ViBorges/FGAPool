@@ -5,15 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -21,7 +17,6 @@ import com.tcc.fgapool.OfferRide
 import com.tcc.fgapool.OfferRideAdapter
 import com.tcc.fgapool.databinding.FragmentRidesBinding
 import com.tcc.fgapool.models.Ride
-import com.tcc.fgapool.models.RideItem
 
 
 class RidesFragment : Fragment() {
@@ -41,10 +36,9 @@ class RidesFragment : Fragment() {
     private lateinit var date: String
     private lateinit var time: String
     private lateinit var driverName: String
-    private lateinit var driverCourse: String
     private lateinit var seatsAvailable: String
 
-    //private lateinit var nothingToShow: LinearLayout
+    private lateinit var mListener: ValueEventListener
 
     private lateinit var recyclerView: RecyclerView
 
@@ -80,9 +74,9 @@ class RidesFragment : Fragment() {
 
     private fun recoverRideData(){
 
-        var rideList: List<RideItem> = emptyList()
+        var rideList: List<Ride> = emptyList()
 
-        databaseRef.addValueEventListener(object : ValueEventListener{
+        mListener = databaseRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(ds: DataSnapshot in snapshot.children){
                     origin = ds.child("origin").value as String
@@ -90,9 +84,11 @@ class RidesFragment : Fragment() {
                     date = ds.child("date").value as String
                     time = ds.child("time").value as String
                     seatsAvailable = ds.child("seatsAvailable").value as String
+                    driverName = ds.child("driverName").value as String
 
                     rideList = rideList + listOf(
-                        RideItem(origin, destination, date, time, "crazy", "Soft", seatsAvailable)
+                        Ride(origin, destination, null, date, time, seatsAvailable,
+                            null, null, null, driverName)
                     )
 
                 }
@@ -113,6 +109,8 @@ class RidesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+
+        databaseRef.removeEventListener(mListener)
     }
 
     private fun updateUI(){
