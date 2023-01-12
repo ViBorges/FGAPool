@@ -1,7 +1,9 @@
 package com.tcc.fgapool.ui.rides
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -14,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -35,6 +38,7 @@ class RidesFragment : Fragment() {
 
     private lateinit var database: FirebaseDatabase
     private lateinit var databaseRef: DatabaseReference
+    private lateinit var uid: String
 
     private lateinit var origin: String
     private lateinit var destination: String
@@ -42,6 +46,8 @@ class RidesFragment : Fragment() {
     private lateinit var time: String
     private lateinit var driverName: String
     private lateinit var seatsAvailable: String
+
+    private lateinit var rideList: List<Ride>
 
     private lateinit var mListener: ValueEventListener
 
@@ -57,6 +63,10 @@ class RidesFragment : Fragment() {
 
         _binding = FragmentRidesBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        //Firebase user reference
+        val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
+        uid = currentFirebaseUser?.uid.toString()
 
         //Database reference
         database = Firebase.database
@@ -79,11 +89,15 @@ class RidesFragment : Fragment() {
 
     private fun recoverRideData(){
 
-        var rideList: List<Ride> = emptyList()
+        rideList = emptyList()
 
         mListener = databaseRef.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
+                rideList = emptyList()
                 for(ds: DataSnapshot in snapshot.children){
+
+                    val rideKey = ds.key as String
+                    val userKey = ds.child("userId").value as String
                     origin = ds.child("origin").value as String
                     destination = ds.child("destination").value as String
                     date = ds.child("date").value as String
@@ -92,8 +106,8 @@ class RidesFragment : Fragment() {
                     driverName = ds.child("driverName").value as String
 
                     rideList = rideList + listOf(
-                        Ride(origin, destination, null, date, time, seatsAvailable,
-                            null, null, null, driverName)
+                        Ride(rideKey, origin, destination, null, date, time, seatsAvailable,
+                            null, null, userKey, driverName)
                     )
 
                 }
@@ -106,11 +120,10 @@ class RidesFragment : Fragment() {
                     }
 
                 })
-                rideList = emptyList()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e(TAG, "onCancelled", error.toException());
             }
 
         })
@@ -119,7 +132,8 @@ class RidesFragment : Fragment() {
 
     private fun performOptionsMenuClick(position: Int){
 
-        val popupMenu = PopupMenu(context , binding.rideRecyclerview[position].findViewById(com.tcc.fgapool.R.id.rideItemMenu))
+        val popupMenu = PopupMenu(context , binding.rideRecyclerview[position].
+        findViewById(com.tcc.fgapool.R.id.rideItemMenu))
 
         popupMenu.inflate(com.tcc.fgapool.R.menu.ride_item_menu)
 
@@ -127,14 +141,12 @@ class RidesFragment : Fragment() {
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 when(item?.itemId){
                     com.tcc.fgapool.R.id.editRide -> {
-                        // here are the logic to delete an item from the list
                         Toast.makeText(context , "edit clicked" , Toast.LENGTH_SHORT).show()
                         return true
                     }
-                    // in the same way you can implement others
                     com.tcc.fgapool.R.id.deleteRide -> {
-                        // define
-                        Toast.makeText(context , "delete clicked" , Toast.LENGTH_SHORT).show()
+                        deleteRide(position)
+                        //Toast.makeText(context , "delete clicked" , Toast.LENGTH_SHORT).show()
                         return true
                     }
 
@@ -145,6 +157,30 @@ class RidesFragment : Fragment() {
         popupMenu.show()
     }
 
+    private fun deleteRide(position: Int){
+
+        val tempRideList = rideList.reversed()[position]
+
+        if (tempRideList.userId == uid){
+            tempRideList.rideKey?.let { databaseRef.child(it)}?.
+            addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.ref.removeValue()
+                        .addOnSuccessListener {
+                        Toast.makeText(context , "Removido com sucesso!" , Toast.LENGTH_SHORT).show()
+                    }
+                        .addOnFailureListener {
+                            Toast.makeText(context , "Não foi possível fazer isto, tente novamente!" , Toast.LENGTH_SHORT).show()
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(TAG, "onCancelled", error.toException());
+                }
+            })
+        }else{
+            Toast.makeText(context , "Você não tem autorização para fazer isso!" , Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

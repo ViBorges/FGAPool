@@ -128,7 +128,7 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             ) {
                 alertDialog()
             } else {
-                writeNewRide(originEditText.text.toString(), destinationEditText.text.toString(),
+                writeNewRide(null, originEditText.text.toString(), destinationEditText.text.toString(),
                 routeEditText.text.toString(), dateEditText.text.toString(), timeEditText.text.toString(),
                 seatsEditText.text.toString(), sameSexPassengers, true, uid, driverName)
             }
@@ -157,6 +157,7 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
     }
 
     private fun writeNewRide(
+        rideKey: String?,
         origin: String,
         destination: String,
         route: String,
@@ -170,6 +171,7 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
     ) {
 
         val ride = Ride(
+            rideKey,
             origin,
             destination,
             route,
