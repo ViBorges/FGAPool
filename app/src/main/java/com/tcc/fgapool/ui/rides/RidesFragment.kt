@@ -14,12 +14,14 @@ import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavType
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.tcc.fgapool.EditRideActivity
 import com.tcc.fgapool.OfferRide
 import com.tcc.fgapool.OfferRideAdapter
 import com.tcc.fgapool.databinding.FragmentRidesBinding
@@ -98,6 +100,9 @@ class RidesFragment : Fragment() {
 
                     val rideKey = ds.key as String
                     val userKey = ds.child("userId").value as String
+                    val route = ds.child("route").value as String
+                    val sameSex = ds.child("sameSexPassengers").value as Boolean
+                    val isActive = ds.child("active").value as Boolean
                     origin = ds.child("origin").value as String
                     destination = ds.child("destination").value as String
                     date = ds.child("date").value as String
@@ -106,8 +111,8 @@ class RidesFragment : Fragment() {
                     driverName = ds.child("driverName").value as String
 
                     rideList = rideList + listOf(
-                        Ride(rideKey, origin, destination, null, date, time, seatsAvailable,
-                            null, null, userKey, driverName)
+                        Ride(rideKey, origin, destination, route, date, time, seatsAvailable,
+                            sameSex, isActive, userKey, driverName)
                     )
 
                 }
@@ -141,12 +146,11 @@ class RidesFragment : Fragment() {
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 when(item?.itemId){
                     com.tcc.fgapool.R.id.editRide -> {
-                        Toast.makeText(context , "edit clicked" , Toast.LENGTH_SHORT).show()
+                        editRide(position)
                         return true
                     }
                     com.tcc.fgapool.R.id.deleteRide -> {
                         deleteRide(position)
-                        //Toast.makeText(context , "delete clicked" , Toast.LENGTH_SHORT).show()
                         return true
                     }
 
@@ -177,6 +181,19 @@ class RidesFragment : Fragment() {
                     Log.e(TAG, "onCancelled", error.toException());
                 }
             })
+        }else{
+            Toast.makeText(context , "Você não tem autorização para fazer isso!" , Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun editRide(position: Int){
+
+        val tempRideList = rideList.reversed()[position]
+
+        if (tempRideList.userId == uid){
+            val intent = Intent(context, EditRideActivity::class.java)
+            intent.putExtra("listItem", rideList.reversed()[position])
+            startActivity(intent)
         }else{
             Toast.makeText(context , "Você não tem autorização para fazer isso!" , Toast.LENGTH_SHORT).show()
         }

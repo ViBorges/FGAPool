@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.tcc.fgapool.models.Ride
 
+
 class OfferRideAdapter(private val dataSet: List<Ride>,
                        private val optionsMenuClickListener: OptionsMenuClickListener) :
     Adapter<OfferRideAdapter.ViewHolder>() {
