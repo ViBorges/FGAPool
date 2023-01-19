@@ -1,7 +1,9 @@
 package com.tcc.fgapool
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -129,7 +131,8 @@ class GoogleAuthLogin : AppCompatActivity() {
         databaseRef.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 isRegistrationCompleted = snapshot.child("registrationComplete").value as Boolean?
-
+                val isDriver = snapshot.child("isDriver").value as Boolean?
+                IsDriver.isDriver = isDriver
                 if (user!=null) {
                     if (isRegistrationCompleted == true){
                         intent = Intent(baseContext, BottomNavigation::class.java)

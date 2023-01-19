@@ -204,7 +204,7 @@ class EditRideActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
 
         databaseRef.setValue(ride)
             .addOnSuccessListener {
-                Toast.makeText(this, R.string.DB_on_send_success, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.DB_on_edit_success, Toast.LENGTH_SHORT).show()
                 finish()
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }

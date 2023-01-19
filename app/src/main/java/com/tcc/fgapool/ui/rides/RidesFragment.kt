@@ -1,6 +1,8 @@
 package com.tcc.fgapool.ui.rides
 
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +24,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.tcc.fgapool.EditRideActivity
+import com.tcc.fgapool.IsDriver
 import com.tcc.fgapool.OfferRide
 import com.tcc.fgapool.OfferRideAdapter
 import com.tcc.fgapool.databinding.FragmentRidesBinding
@@ -80,6 +83,8 @@ class RidesFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         recoverRideData()
 
+        if (IsDriver.isDriver == false)
+            binding.fab.isVisible = false
 
         binding.fab.setOnClickListener {
             updateUI()
@@ -87,7 +92,6 @@ class RidesFragment : Fragment() {
 
         return root
     }
-
 
     private fun recoverRideData(){
 
@@ -97,23 +101,44 @@ class RidesFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 rideList = emptyList()
                 for(ds: DataSnapshot in snapshot.children){
+                    val userId = ds.child("userId").value as String
+                    if (IsDriver.isDriver == true){
+                        if (userId == uid){
+                            val rideKey = ds.key as String
+                            val userKey = ds.child("userId").value as String
+                            val route = ds.child("route").value as String
+                            val sameSex = ds.child("sameSexPassengers").value as Boolean
+                            val isActive = ds.child("active").value as Boolean
+                            origin = ds.child("origin").value as String
+                            destination = ds.child("destination").value as String
+                            date = ds.child("date").value as String
+                            time = ds.child("time").value as String
+                            seatsAvailable = ds.child("seatsAvailable").value as String
+                            driverName = ds.child("driverName").value as String
 
-                    val rideKey = ds.key as String
-                    val userKey = ds.child("userId").value as String
-                    val route = ds.child("route").value as String
-                    val sameSex = ds.child("sameSexPassengers").value as Boolean
-                    val isActive = ds.child("active").value as Boolean
-                    origin = ds.child("origin").value as String
-                    destination = ds.child("destination").value as String
-                    date = ds.child("date").value as String
-                    time = ds.child("time").value as String
-                    seatsAvailable = ds.child("seatsAvailable").value as String
-                    driverName = ds.child("driverName").value as String
+                            rideList = rideList + listOf(
+                                Ride(rideKey, origin, destination, route, date, time, seatsAvailable,
+                                    sameSex, isActive, userKey, driverName)
+                            )
+                        }
+                    } else {
+                        val rideKey = ds.key as String
+                        val userKey = ds.child("userId").value as String
+                        val route = ds.child("route").value as String
+                        val sameSex = ds.child("sameSexPassengers").value as Boolean
+                        val isActive = ds.child("active").value as Boolean
+                        origin = ds.child("origin").value as String
+                        destination = ds.child("destination").value as String
+                        date = ds.child("date").value as String
+                        time = ds.child("time").value as String
+                        seatsAvailable = ds.child("seatsAvailable").value as String
+                        driverName = ds.child("driverName").value as String
 
-                    rideList = rideList + listOf(
-                        Ride(rideKey, origin, destination, route, date, time, seatsAvailable,
-                            sameSex, isActive, userKey, driverName)
-                    )
+                        rideList = rideList + listOf(
+                            Ride(rideKey, origin, destination, route, date, time, seatsAvailable,
+                                sameSex, isActive, userKey, driverName)
+                        )
+                    }
 
                 }
 

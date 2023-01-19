@@ -91,6 +91,7 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
                     databaseRef.child("carModel").setValue(carModel.text.toString())
                     databaseRef.child("carColor").setValue(carColor.text.toString())
                     databaseRef.child("registrationComplete").setValue(true)
+                    IsDriver.isDriver = isDriver
                     updateUI()
                 }
             } else if (checkPassengerInputs(registrationNumber, phoneNumber, courseDropdown, genderDropdown)){
@@ -102,6 +103,7 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
                 databaseRef.child("phoneNumber").setValue(phoneNumber.text.toString())
                 databaseRef.child("isDriver").setValue(isDriver)
                 databaseRef.child("registrationComplete").setValue(true)
+                IsDriver.isDriver = isDriver
                 updateUI()
             }
         }

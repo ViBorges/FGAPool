@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.tcc.fgapool.models.Ride
@@ -70,6 +71,10 @@ class OfferRideAdapter(private val dataSet: List<Ride>,
         viewHolder.driverName.text = dataSet[position].driverName
         //viewHolder.driverCourse.text = dataSet[position].driverCourse
         viewHolder.seatsAvailable.text = dataSet[position].seatsAvailable
+
+        if (IsDriver.isDriver == false){
+            viewHolder.rideItemMenu.isVisible = false
+        }
 
         viewHolder.rideItemMenu.setOnClickListener {
             optionsMenuClickListener.onOptionsMenuClicked(position)
