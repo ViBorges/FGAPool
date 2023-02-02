@@ -1,35 +1,27 @@
 package com.tcc.fgapool.ui.rides
 
 import android.content.ContentValues.TAG
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.core.view.get
+import android.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavType
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.tcc.fgapool.EditRideActivity
 import com.tcc.fgapool.IsDriver
 import com.tcc.fgapool.OfferRide
 import com.tcc.fgapool.OfferRideAdapter
 import com.tcc.fgapool.databinding.FragmentRidesBinding
 import com.tcc.fgapool.models.Ride
-import java.text.FieldPosition
 
 
 class RidesFragment : Fragment() {
@@ -51,20 +43,16 @@ class RidesFragment : Fragment() {
     private lateinit var time: String
     private lateinit var driverName: String
     private lateinit var seatsAvailable: String
+    private lateinit var searchRide: androidx.appcompat.widget.SearchView
 
     private lateinit var rideList: List<Ride>
-
     private lateinit var mListener: ValueEventListener
-
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        ridesViewModel =
-            ViewModelProvider(this)[RidesViewModel::class.java]
+        ridesViewModel = ViewModelProvider(this)[RidesViewModel::class.java]
 
         _binding = FragmentRidesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -83,8 +71,21 @@ class RidesFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         recoverRideData()
 
-        if (IsDriver.isDriver == false)
-            binding.fab.isVisible = false
+        searchRide = binding.searchRides
+        searchRide.clearFocus()
+        searchRide.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filteredList(newText)
+                return true
+            }
+        })
+
+        if (IsDriver.isDriver == false) binding.fab.isVisible = false
 
         binding.fab.setOnClickListener {
             updateUI()
@@ -93,17 +94,36 @@ class RidesFragment : Fragment() {
         return root
     }
 
-    private fun recoverRideData(){
+    private fun filteredList(newText: String?) {
+        var filteredList: List<Ride> = emptyList()
+        for (ride: Ride in rideList) {
+            if (newText != null) {
+                if (ride.destination?.lowercase()?.contains(newText.lowercase()) == true) {
+                    filteredList = filteredList + listOf(ride)
+                }
+            }
+        }
+
+        binding.notFound.isVisible = filteredList.isEmpty()
+        setAdapter(filteredList)
+
+    }
+
+    private fun setAdapter(list: List<Ride>) {
+        recyclerView.adapter = OfferRideAdapter(list.reversed())
+    }
+
+    private fun recoverRideData() {
 
         rideList = emptyList()
 
-        mListener = databaseRef.addValueEventListener(object : ValueEventListener{
+        mListener = databaseRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 rideList = emptyList()
-                for(ds: DataSnapshot in snapshot.children){
+                for (ds: DataSnapshot in snapshot.children) {
                     val userId = ds.child("userId").value as String
-                    if (IsDriver.isDriver == true){
-                        if (userId == uid){
+                    if (IsDriver.isDriver == true) {
+                        if (userId == uid) {
                             val rideKey = ds.key as String
                             val userKey = ds.child("userId").value as String
                             val route = ds.child("route").value as String
@@ -117,8 +137,19 @@ class RidesFragment : Fragment() {
                             driverName = ds.child("driverName").value as String
 
                             rideList = rideList + listOf(
-                                Ride(rideKey, origin, destination, route, date, time, seatsAvailable,
-                                    sameSex, isActive, userKey, driverName)
+                                Ride(
+                                    rideKey,
+                                    origin,
+                                    destination,
+                                    route,
+                                    date,
+                                    time,
+                                    seatsAvailable,
+                                    sameSex,
+                                    isActive,
+                                    userKey,
+                                    driverName
+                                )
                             )
                         }
                     } else {
@@ -135,93 +166,33 @@ class RidesFragment : Fragment() {
                         driverName = ds.child("driverName").value as String
 
                         rideList = rideList + listOf(
-                            Ride(rideKey, origin, destination, route, date, time, seatsAvailable,
-                                sameSex, isActive, userKey, driverName)
+                            Ride(
+                                rideKey,
+                                origin,
+                                destination,
+                                route,
+                                date,
+                                time,
+                                seatsAvailable,
+                                sameSex,
+                                isActive,
+                                userKey,
+                                driverName
+                            )
                         )
                     }
 
                 }
 
                 binding.nothingToShow.isVisible = rideList.isEmpty()
-                recyclerView.adapter = OfferRideAdapter(rideList.reversed(),
-                    object: OfferRideAdapter.OptionsMenuClickListener{
-                    override fun onOptionsMenuClicked(position: Int) {
-                        performOptionsMenuClick(position)
-                    }
-
-                })
+                recyclerView.adapter = OfferRideAdapter(rideList.reversed())
+                binding.progressBarRecyclerView.isVisible = false
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "onCancelled", error.toException());
-            }
-
-        })
-
-    }
-
-    private fun performOptionsMenuClick(position: Int){
-
-        val popupMenu = PopupMenu(context , binding.rideRecyclerview[position].
-        findViewById(com.tcc.fgapool.R.id.rideItemMenu))
-
-        popupMenu.inflate(com.tcc.fgapool.R.menu.ride_item_menu)
-
-        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener{
-            override fun onMenuItemClick(item: MenuItem?): Boolean {
-                when(item?.itemId){
-                    com.tcc.fgapool.R.id.editRide -> {
-                        editRide(position)
-                        return true
-                    }
-                    com.tcc.fgapool.R.id.deleteRide -> {
-                        deleteRide(position)
-                        return true
-                    }
-
-                }
-                return false
+                Log.e(TAG, "onCancelled", error.toException())
             }
         })
-        popupMenu.show()
-    }
-
-    private fun deleteRide(position: Int){
-
-        val tempRideList = rideList.reversed()[position]
-
-        if (tempRideList.userId == uid){
-            tempRideList.rideKey?.let { databaseRef.child(it)}?.
-            addListenerForSingleValueEvent(object: ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.ref.removeValue()
-                        .addOnSuccessListener {
-                        Toast.makeText(context , "Removido com sucesso!" , Toast.LENGTH_SHORT).show()
-                    }
-                        .addOnFailureListener {
-                            Toast.makeText(context , "Não foi possível fazer isto, tente novamente!" , Toast.LENGTH_SHORT).show()
-                    }
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e(TAG, "onCancelled", error.toException());
-                }
-            })
-        }else{
-            Toast.makeText(context , "Você não tem autorização para fazer isso!" , Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun editRide(position: Int){
-
-        val tempRideList = rideList.reversed()[position]
-
-        if (tempRideList.userId == uid){
-            val intent = Intent(context, EditRideActivity::class.java)
-            intent.putExtra("listItem", rideList.reversed()[position])
-            startActivity(intent)
-        }else{
-            Toast.makeText(context , "Você não tem autorização para fazer isso!" , Toast.LENGTH_SHORT).show()
-        }
     }
 
     override fun onDestroyView() {
@@ -231,7 +202,7 @@ class RidesFragment : Fragment() {
         databaseRef.removeEventListener(mListener)
     }
 
-    private fun updateUI(){
+    private fun updateUI() {
         val intent = Intent(context, OfferRide::class.java)
         startActivity(intent)
     }
