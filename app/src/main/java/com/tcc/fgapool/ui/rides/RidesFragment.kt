@@ -73,17 +73,7 @@ class RidesFragment : Fragment() {
 
         searchRide = binding.searchRides
         searchRide.clearFocus()
-        searchRide.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                filteredList(newText)
-                return true
-            }
-        })
 
         if (IsDriver.isDriver == false) binding.fab.isVisible = false
 
@@ -200,6 +190,24 @@ class RidesFragment : Fragment() {
         _binding = null
 
         databaseRef.removeEventListener(mListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        searchRide.setQuery("", false); // clear the text
+        //searchRide.isIconified = true;
+
+        searchRide.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filteredList(newText)
+                return true
+            }
+        })
     }
 
     private fun updateUI() {
