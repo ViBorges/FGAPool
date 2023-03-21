@@ -43,7 +43,14 @@ class OfferRideAdapter(private var dataSet: List<Ride>) : Adapter<OfferRideAdapt
             seatsAvailable = view.findViewById(R.id.seatsAvailable)
             rideItemMenu = view.findViewById(R.id.rideItemMenu)
             rideItemMenu.setOnClickListener { popupMenu(it) }
+
+            view.setOnClickListener {
+                val intent = Intent(view.context, RideDetailActivity::class.java)
+                view.context.startActivity(intent)
+            }
         }
+
+
 
         private fun popupMenu(v: View?) {
             val popupMenu = PopupMenu(v?.context, v)

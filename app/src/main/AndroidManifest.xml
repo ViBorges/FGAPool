@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the "MyLocation" functionality.
-    -->
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_gama"
@@ -13,9 +9,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FGAPool">
         <activity
+            android:name=".RideDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FGAPool.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".EditRideActivity"
-            android:theme="@style/Theme.FGAPool.NoActionBar"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/Theme.FGAPool.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -204,7 +205,8 @@ class RidesFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filteredList(newText)
+                if (rideList.isNotEmpty())
+                    filteredList(newText)
                 return true
             }
         })
