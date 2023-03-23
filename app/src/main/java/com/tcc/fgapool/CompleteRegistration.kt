@@ -91,6 +91,8 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
                     databaseRef.child("carModel").setValue(carModel.text.toString())
                     databaseRef.child("carColor").setValue(carColor.text.toString())
                     databaseRef.child("registrationComplete").setValue(true)
+                    databaseRef.child("photoURL").setValue(currentUser?.photoUrl.toString())
+                    databaseRef.child("name").setValue(currentUser?.displayName.toString())
                     IsDriver.isDriver = isDriver
                     updateUI()
                 }
@@ -103,6 +105,7 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
                 databaseRef.child("phoneNumber").setValue(phoneNumber.text.toString())
                 databaseRef.child("isDriver").setValue(isDriver)
                 databaseRef.child("registrationComplete").setValue(true)
+                databaseRef.child("photoURL").setValue(currentUser?.photoUrl.toString())
                 IsDriver.isDriver = isDriver
                 updateUI()
             }

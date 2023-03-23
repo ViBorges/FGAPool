@@ -46,6 +46,7 @@ class OfferRideAdapter(private var dataSet: List<Ride>) : Adapter<OfferRideAdapt
 
             view.setOnClickListener {
                 val intent = Intent(view.context, RideDetailActivity::class.java)
+                intent.putExtra("listItem", dataSet[absoluteAdapterPosition])
                 view.context.startActivity(intent)
             }
         }
