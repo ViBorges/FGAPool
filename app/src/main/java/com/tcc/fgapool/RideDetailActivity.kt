@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -12,14 +13,12 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import com.tcc.fgapool.databinding.ActivityRideDetailBinding
 import com.tcc.fgapool.models.Ride
+import com.tcc.fgapool.models.RideRequest
 import com.tcc.fgapool.utils.CircleTransformation
 
 class RideDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRideDetailBinding
-    private lateinit var database: FirebaseDatabase
-    private lateinit var databaseRef: DatabaseReference
-
     private lateinit var driverId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,18 +46,32 @@ class RideDetailActivity : AppCompatActivity() {
         //Firebase user reference
         val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
 
-        //Database reference
-        database = Firebase.database
-        databaseRef = database.getReference("signup_info/").child(driverId)
-
         recoverUserData()
 
         binding.rideRequestButton.setOnClickListener {
+            requestRide(mListItem?.rideKey.toString(), currentFirebaseUser?.uid.toString())
         }
 
     }
 
+    private fun requestRide(ridekey: String, userID: String){
+        val database: FirebaseDatabase = Firebase.database
+        val databaseRef: DatabaseReference = database.getReference("ride_request").push()
+
+        val rideResquest = RideRequest(ridekey, userID)
+
+        databaseRef.setValue(rideResquest)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Pedido realizado com sucesso!", Toast.LENGTH_SHORT).show()
+        }   .addOnFailureListener {
+                Toast.makeText(this, R.string.DB_on_send_failure, Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun recoverUserData() {
+
+        val database: FirebaseDatabase = Firebase.database
+        val databaseRef: DatabaseReference = database.getReference("signup_info/").child(driverId)
 
         databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
