@@ -8,9 +8,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.tcc.fgapool.databinding.FragmentNotificationsBinding
-import com.tcc.fgapool.models.Notification
-import com.tcc.fgapool.utils.NotificationAdapter
+import com.tcc.fgapool.models.RideRequest
+import com.tcc.fgapool.NotificationAdapter
 
 class NotificationsFragment : Fragment() {
 
@@ -18,7 +26,11 @@ class NotificationsFragment : Fragment() {
     private var _binding: FragmentNotificationsBinding? = null
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var notificationList: List<Notification>
+    private lateinit var requetsList: List<RideRequest>
+    private lateinit var mListener: ValueEventListener
+    private lateinit var userId: String
+    private lateinit var database: FirebaseDatabase
+    private lateinit var databaseRef: DatabaseReference
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,27 +44,69 @@ class NotificationsFragment : Fragment() {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        //Firebase user reference
+        val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
+        userId = currentFirebaseUser?.uid.toString()
+
+        //Database reference
+        database = Firebase.database
+        databaseRef = database.getReference("ride_request/")
+
         //Set RecyclerView
         recyclerView = binding.notificationRecyclerView
-        recyclerView.adapter = NotificationAdapter(notifications())
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
+        getRequests()
 
 
         return root
     }
 
-    private fun notifications(): List<Notification> {
-        return listOf(
-            Notification("Fernanda Borges\nSolicitou uma carona", null, null, null),
-            Notification("Vinicius Borges\nSolicitou uma carona", null, null, null),
-            Notification("Brenda Caroline\nSolicitou uma carona", null, null, null)
+    private fun getRequests(){
 
-        )
+        requetsList = emptyList()
+
+        mListener = databaseRef.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                requetsList = emptyList()
+                for (ds: DataSnapshot in snapshot.children){
+                    if (userId == ds.child("driverID").value as String){
+                        val requestKey = ds.key as String
+                        val rideKey = ds.child("rideKey").value as String
+                        val passengerID = ds.child("passengerID").value as String
+                        val driverID = ds.child("driverID").value as String
+                        val passengerName = ds.child("passengerName").value as String
+                        val passengerNumber = ds.child("passengerNumber").value as String
+
+                        requetsList = requetsList + listOf(
+                            RideRequest(
+                                rideKey,
+                                passengerID,
+                                driverID,
+                                "$passengerName\nSolicitou uma carona",
+                                passengerNumber,
+                                requestKey
+                            )
+                        )
+                    }
+                }
+
+                recyclerView.adapter = NotificationAdapter(requetsList)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+
+        databaseRef.removeEventListener(mListener)
     }
 }

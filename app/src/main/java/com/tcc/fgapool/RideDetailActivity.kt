@@ -28,6 +28,8 @@ class RideDetailActivity : AppCompatActivity() {
     private lateinit var driverId: String
     private lateinit var rideKey: String
     private lateinit var userId: String
+    private lateinit var userName: String
+    private lateinit var userNumber: String
     private lateinit var rideRequestButton: MaterialButton
     private lateinit var buttonProgressBar: ProgressBar
     private var counter = 0
@@ -61,11 +63,32 @@ class RideDetailActivity : AppCompatActivity() {
         //Firebase user reference
         val currentFirebaseUser = FirebaseAuth.getInstance().currentUser
         userId = currentFirebaseUser?.uid.toString()
+        userName = currentFirebaseUser?.displayName.toString()
+
+        getPassengerData()
 
         recoverUserData()
         checkRequest(userId, rideKey, rideRequestButton)
 
         showCarInfo(binding.carDetailCard)
+    }
+
+    private fun getPassengerData(){
+        if (IsDriver.isDriver == false){
+            val database = Firebase.database
+            val databaseRef = database.getReference("signup_info").child(userId)
+
+            databaseRef.addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    userNumber = snapshot.child("phoneNumber").value as String
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(ContentValues.TAG, "onCancelled", error.toException())
+                }
+
+            })
+        }
     }
 
     private fun showCarInfo(card: CardView) {
@@ -93,6 +116,8 @@ class RideDetailActivity : AppCompatActivity() {
             }
         })
     }
+
+
 
     private fun deleteRequest() {
         val database: FirebaseDatabase = Firebase.database
@@ -158,7 +183,7 @@ class RideDetailActivity : AppCompatActivity() {
         val database: FirebaseDatabase = Firebase.database
         val databaseRef: DatabaseReference = database.getReference("ride_request").push()
 
-        val rideRequest = RideRequest(rideKey, userID)
+        val rideRequest = RideRequest(rideKey, userID, driverId, userName, userNumber)
 
         databaseRef.setValue(rideRequest).addOnSuccessListener {
                 cancelRequestButton(button)

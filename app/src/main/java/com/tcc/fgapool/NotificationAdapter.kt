@@ -1,4 +1,4 @@
-package com.tcc.fgapool.utils
+package com.tcc.fgapool
 
 import android.content.Intent
 import android.net.Uri
@@ -8,10 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.tcc.fgapool.R
-import com.tcc.fgapool.models.Notification
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.tcc.fgapool.models.RideRequest
 
-class NotificationAdapter(private val dataSet: List<Notification>) :
+class NotificationAdapter(private val dataSet: List<RideRequest>) :
     RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -22,6 +23,12 @@ class NotificationAdapter(private val dataSet: List<Notification>) :
         val telegramButton: ImageView
         val acceptButton: ImageView
         val rejectButton: ImageView
+        lateinit var rideKey: String
+        lateinit var passengerID: String
+        lateinit var driverID: String
+        lateinit var passengerName: String
+        lateinit var passengerNumber: String
+        lateinit var requestKey: String
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -34,16 +41,27 @@ class NotificationAdapter(private val dataSet: List<Notification>) :
 
             wppButton.setOnClickListener {
                 val urlIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://wa.me/+5561numero?text=Posso confirmar sua carona?"))
+                    Uri.parse("https://wa.me/+55$passengerNumber?text=Posso confirmar sua carona?"))
                 view.context.startActivity(urlIntent)
             }
 
             telegramButton.setOnClickListener {
                 val urlIntent = Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://t.me/+5561numero"))
+                    Uri.parse("https://t.me/+55$passengerNumber"))
                 view.context.startActivity(urlIntent)
             }
+
+            rejectButton.setOnClickListener {
+                rejectRequest()
+            }
         }
+
+        private fun rejectRequest(){
+            val database = Firebase.database
+            val databaseRef = database.getReference("ride_request/")
+            databaseRef.child(requestKey).removeValue()
+        }
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -62,7 +80,13 @@ class NotificationAdapter(private val dataSet: List<Notification>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         //viewHolder.textView.text = dataSet[position].toString()
-        viewHolder.messageText.text = dataSet[position].message
+        viewHolder.messageText.text = dataSet[position].passengerName
+        viewHolder.passengerID = dataSet[position].passengerID.toString()
+        viewHolder.rideKey = dataSet[position].rideKey.toString()
+        viewHolder.driverID = dataSet[position].driverID.toString()
+        viewHolder.passengerName = dataSet[position].passengerName.toString()
+        viewHolder.passengerNumber = dataSet[position].passengerNumber.toString()
+        viewHolder.requestKey = dataSet[position].requestKey.toString()
     }
 
     // Return the size of your dataset (invoked by the layout manager)
