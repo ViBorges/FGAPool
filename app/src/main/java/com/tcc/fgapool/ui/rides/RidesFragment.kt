@@ -126,6 +126,10 @@ class RidesFragment : Fragment() {
                             time = ds.child("time").value as String
                             seatsAvailable = ds.child("seatsAvailable").value as String
                             driverName = ds.child("driverName").value as String
+                            val passenger1 = ds.child("passenger1").value as String?
+                            val passenger2 = ds.child("passenger2").value as String?
+                            val passenger3 = ds.child("passenger3").value as String?
+                            val passenger4 = ds.child("passenger4").value as String?
 
                             rideList = rideList + listOf(
                                 Ride(
@@ -139,7 +143,11 @@ class RidesFragment : Fragment() {
                                     sameSex,
                                     isActive,
                                     userKey,
-                                    driverName
+                                    driverName,
+                                    passenger1,
+                                    passenger2,
+                                    passenger3,
+                                    passenger4
                                 )
                             )
                         }
@@ -155,6 +163,10 @@ class RidesFragment : Fragment() {
                         time = ds.child("time").value as String
                         seatsAvailable = ds.child("seatsAvailable").value as String
                         driverName = ds.child("driverName").value as String
+                        val passenger1 = ds.child("passenger1").value as String?
+                        val passenger2 = ds.child("passenger2").value as String?
+                        val passenger3 = ds.child("passenger3").value as String?
+                        val passenger4 = ds.child("passenger4").value as String?
 
                         rideList = rideList + listOf(
                             Ride(
@@ -168,7 +180,11 @@ class RidesFragment : Fragment() {
                                 sameSex,
                                 isActive,
                                 userKey,
-                                driverName
+                                driverName,
+                                passenger1,
+                                passenger2,
+                                passenger3,
+                                passenger4
                             )
                         )
                     }

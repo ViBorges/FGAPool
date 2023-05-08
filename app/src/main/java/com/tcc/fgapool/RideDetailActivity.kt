@@ -21,6 +21,7 @@ import com.tcc.fgapool.models.Ride
 import com.tcc.fgapool.models.RideRequest
 import com.tcc.fgapool.utils.CircleTransformation
 import kotlinx.coroutines.delay
+import kotlin.properties.Delegates
 
 class RideDetailActivity : AppCompatActivity() {
 
@@ -32,6 +33,11 @@ class RideDetailActivity : AppCompatActivity() {
     private lateinit var userNumber: String
     private lateinit var rideRequestButton: MaterialButton
     private lateinit var buttonProgressBar: ProgressBar
+    private lateinit var passenger1: String
+    private lateinit var passenger2: String
+    private lateinit var passenger3: String
+    private lateinit var passenger4: String
+    private var isPassenger: Boolean = false
     private var counter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +63,10 @@ class RideDetailActivity : AppCompatActivity() {
             binding.time.text = mListItem.time
             driverId = mListItem.userId.toString()
             rideKey = mListItem.rideKey.toString()
-
+            passenger1 = mListItem.passenger1.toString()
+            passenger2 = mListItem.passenger2.toString()
+            passenger3 = mListItem.passenger3.toString()
+            passenger4 = mListItem.passenger4.toString()
         }
 
         //Firebase user reference
@@ -68,7 +77,7 @@ class RideDetailActivity : AppCompatActivity() {
         getPassengerData()
 
         recoverUserData()
-        checkRequest(userId, rideKey, rideRequestButton)
+        checkIfPassenger(rideRequestButton)
 
         showCarInfo(binding.carDetailCard)
     }
@@ -92,7 +101,21 @@ class RideDetailActivity : AppCompatActivity() {
     }
 
     private fun showCarInfo(card: CardView) {
-        if (IsDriver.isDriver != true) card.visibility = GONE
+        if (IsDriver.isDriver != true && !isPassenger) card.visibility = GONE
+    }
+
+    private fun checkIfPassenger(button: MaterialButton){
+        if (userId == passenger1 || userId == passenger2 || userId == passenger3 || userId == passenger4) run {
+            changeButtonStyle(button, "Sair da carona", R.color.red)
+            isPassenger = true
+            button.setOnClickListener{
+                Toast.makeText(
+                    baseContext, "Não implementado", Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            checkRequest(userId, rideKey, rideRequestButton)
+        }
     }
 
     private fun checkRequest(userId: String, rideKey: String, requestButton: MaterialButton) {

@@ -83,7 +83,7 @@ class NotificationsFragment : Fragment() {
                                 rideKey,
                                 passengerID,
                                 driverID,
-                                "$passengerName\nSolicitou uma carona",
+                                passengerName,
                                 passengerNumber,
                                 requestKey
                             )
