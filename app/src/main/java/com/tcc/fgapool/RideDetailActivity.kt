@@ -104,14 +104,48 @@ class RideDetailActivity : AppCompatActivity() {
         if (IsDriver.isDriver != true && !isPassenger) card.visibility = GONE
     }
 
+    private fun leaveRide(){
+        when(userId){
+            passenger1 -> deletePassenger(1)
+            passenger2 -> deletePassenger(2)
+            passenger3 -> deletePassenger(3)
+            passenger4 -> deletePassenger(4)
+        }
+    }
+
+    private fun deletePassenger(passenger: Int){
+        val database = Firebase.database
+        val databaseRef = database.getReference("rides/").child(rideKey)
+        databaseRef.child("passenger$passenger").removeValue().addOnSuccessListener {
+            updateSeats()
+            requestRideButton(rideRequestButton)
+            binding.carDetailCard.visibility = GONE
+        }
+    }
+
+    private fun updateSeats(){
+        val database = Firebase.database
+        val databaseRef = database.getReference("rides/").child(rideKey)
+        databaseRef.addListenerForSingleValueEvent(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val seats = snapshot.child("seatsAvailable").value as String
+                val sumSeats = (seats.toInt() + 1).toString()
+                databaseRef.child("seatsAvailable").setValue(sumSeats)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(ContentValues.TAG, "onCancelled", error.toException())
+            }
+
+        })
+    }
+
     private fun checkIfPassenger(button: MaterialButton){
         if (userId == passenger1 || userId == passenger2 || userId == passenger3 || userId == passenger4) run {
             changeButtonStyle(button, "Sair da carona", R.color.red)
             isPassenger = true
             button.setOnClickListener{
-                Toast.makeText(
-                    baseContext, "Não implementado", Toast.LENGTH_SHORT
-                ).show()
+                leaveRide()
             }
         } else {
             checkRequest(userId, rideKey, rideRequestButton)

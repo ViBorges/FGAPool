@@ -1,7 +1,9 @@
 package com.tcc.fgapool
 
+import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,7 +95,7 @@ class NotificationAdapter(private val dataSet: List<RideRequest>) :
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                    Log.e(ContentValues.TAG, "onCancelled", error.toException())
                 }
 
             })
