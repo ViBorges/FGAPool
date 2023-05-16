@@ -1,14 +1,16 @@
 package com.tcc.fgapool
 
 import android.content.ContentValues
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
@@ -20,8 +22,6 @@ import com.tcc.fgapool.databinding.ActivityRideDetailBinding
 import com.tcc.fgapool.models.Ride
 import com.tcc.fgapool.models.RideRequest
 import com.tcc.fgapool.utils.CircleTransformation
-import kotlinx.coroutines.delay
-import kotlin.properties.Delegates
 
 class RideDetailActivity : AppCompatActivity() {
 
@@ -39,6 +39,7 @@ class RideDetailActivity : AppCompatActivity() {
     private lateinit var passenger4: String
     private var isPassenger: Boolean = false
     private var counter = 0
+    private lateinit var driverPhoneNumber: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +81,9 @@ class RideDetailActivity : AppCompatActivity() {
         checkIfPassenger(rideRequestButton)
 
         showCarInfo(binding.carDetailCard)
+        showWppButton()
+        getDriverPhoneNumber()
+        handleWppBtnClick()
     }
 
     private fun getPassengerData(){
@@ -104,6 +108,34 @@ class RideDetailActivity : AppCompatActivity() {
         if (IsDriver.isDriver != true && !isPassenger) card.visibility = GONE
     }
 
+    private fun showWppButton(){
+        if (isPassenger) binding.wppBtn.visibility = VISIBLE
+    }
+
+    private fun handleWppBtnClick(){
+        binding.wppBtn.setOnClickListener {
+            val urlIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://wa.me/+55$driverPhoneNumber?"))
+            startActivity(urlIntent)
+        }
+    }
+
+    private fun getDriverPhoneNumber(){
+        val database = Firebase.database
+        val databaseRef = database.getReference("signup_info").child(driverId)
+        databaseRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                driverPhoneNumber = snapshot.child("phoneNumber").value as String
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(ContentValues.TAG, "onCancelled", error.toException())
+            }
+
+        })
+    }
+
     private fun leaveRide(){
         when(userId){
             passenger1 -> deletePassenger(1)
@@ -120,6 +152,7 @@ class RideDetailActivity : AppCompatActivity() {
             updateSeats()
             requestRideButton(rideRequestButton)
             binding.carDetailCard.visibility = GONE
+            binding.wppBtn.visibility = GONE
         }
     }
 

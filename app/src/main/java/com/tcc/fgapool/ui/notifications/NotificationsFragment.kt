@@ -1,6 +1,8 @@
 package com.tcc.fgapool.ui.notifications
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,7 +98,7 @@ class NotificationsFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Log.e(ContentValues.TAG, "onCancelled", error.toException())
             }
 
         })

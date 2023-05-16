@@ -24,6 +24,19 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/wppBtn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/wpp_green"
+                android:layout_marginBottom="15dp"
+                android:clickable="true"
+                android:visibility="gone"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:focusable="true" />
+
+            <ImageView
                 android:id="@+id/profile_photo"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
