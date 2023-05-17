@@ -117,6 +117,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/passengers_disclaimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Não há passageiros"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/passengers_text" />
+
+            <TextView
                 android:id="@+id/destination"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -229,10 +237,13 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="10dp"
-                android:clickable="true"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/ic_person_black"
+                android:clickable="true"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/passengers_text" />
+                app:layout_constraintTop_toBottomOf="@+id/passengers_text"
+                android:focusable="true" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline4"
@@ -246,9 +257,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="Mariana"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/guideline4"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
                 app:layout_constraintTop_toBottomOf="@+id/person1_image" />
@@ -264,8 +275,11 @@
                 android:id="@+id/person2_image"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:clickable="true"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/ic_person_2"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/guideline6"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/passengers_text" />
@@ -275,9 +289,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="João"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/guideline6"
                 app:layout_constraintStart_toStartOf="@+id/guideline4"
                 app:layout_constraintTop_toBottomOf="@+id/person2_image" />
@@ -293,8 +307,11 @@
                 android:id="@+id/person3_image"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:clickable="true"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/ic_person_3"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/guideline7"
                 app:layout_constraintStart_toStartOf="@+id/guideline6"
                 app:layout_constraintTop_toBottomOf="@+id/passengers_text" />
@@ -304,9 +321,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="Fernando"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/guideline7"
                 app:layout_constraintStart_toStartOf="@+id/guideline6"
                 app:layout_constraintTop_toBottomOf="@+id/person3_image" />
@@ -315,8 +332,11 @@
                 android:id="@+id/person4_image"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:clickable="true"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/ic_person_4"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
                 app:layout_constraintTop_toBottomOf="@+id/passengers_text" />
@@ -326,9 +346,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="Joana"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
                 app:layout_constraintTop_toBottomOf="@+id/person4_image" />
@@ -338,8 +358,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:visibility="gone"
                 android:text="Não há passageiros\nnessa carona."
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/guideline2"
                 app:layout_constraintTop_toBottomOf="@+id/passengers_text" />
 
@@ -368,9 +388,9 @@
 
             <ImageView
                 android:id="@+id/car_icon"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:background="@drawable/ic_car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/car_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline8"
                 app:layout_constraintStart_toStartOf="parent"
@@ -442,7 +462,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.3" />
+                app:layout_constraintGuide_percent="0.4" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

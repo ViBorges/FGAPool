@@ -106,6 +106,7 @@ class CompleteRegistration : AppCompatActivity(), CompoundButton.OnCheckedChange
                 databaseRef.child("isDriver").setValue(isDriver)
                 databaseRef.child("registrationComplete").setValue(true)
                 databaseRef.child("photoURL").setValue(currentUser?.photoUrl.toString())
+                databaseRef.child("name").setValue(currentUser?.displayName.toString())
                 IsDriver.isDriver = isDriver
                 updateUI()
             }
