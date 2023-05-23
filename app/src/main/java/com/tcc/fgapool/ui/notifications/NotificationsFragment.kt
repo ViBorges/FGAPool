@@ -18,9 +18,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.tcc.fgapool.IsDriver
 import com.tcc.fgapool.databinding.FragmentNotificationsBinding
 import com.tcc.fgapool.models.RideRequest
 import com.tcc.fgapool.NotificationAdapter
+import com.tcc.fgapool.RequestResponseAdapter
+import com.tcc.fgapool.models.RequestResponse
 
 class NotificationsFragment : Fragment() {
 
@@ -28,11 +31,14 @@ class NotificationsFragment : Fragment() {
     private var _binding: FragmentNotificationsBinding? = null
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var requetsList: List<RideRequest>
+    private lateinit var requestsList: List<RideRequest>
     private lateinit var mListener: ValueEventListener
     private lateinit var userId: String
     private lateinit var database: FirebaseDatabase
     private lateinit var databaseRef: DatabaseReference
+    private lateinit var databaseRefResponse: DatabaseReference
+    private lateinit var requestResponsesList: List<RequestResponse>
+
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -40,7 +46,7 @@ class NotificationsFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         notificationsViewModel = ViewModelProvider(this)[NotificationsViewModel::class.java]
 
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
@@ -53,24 +59,65 @@ class NotificationsFragment : Fragment() {
         //Database reference
         database = Firebase.database
         databaseRef = database.getReference("ride_request/")
+        databaseRefResponse = database.getReference("request_response/")
 
-        //Set RecyclerView
-        recyclerView = binding.notificationRecyclerView
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = layoutManager
-        getRequests()
-
+        setRecyclerViewAdapter()
 
         return root
     }
 
+    private fun setRecyclerViewAdapter(){
+        recyclerView = binding.notificationRecyclerView
+        val layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = layoutManager
+
+        if (IsDriver.isDriver == true){
+            getRequests()
+        } else {
+            getRequestResponses()
+        }
+    }
+
+    private fun getRequestResponses(){
+
+        requestResponsesList = emptyList()
+
+        mListener = databaseRefResponse.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                requestResponsesList = emptyList()
+                for (ds: DataSnapshot in snapshot.children) {
+                    if (userId == ds.child("passengerID").value as String){
+                        val requestResponseKey = ds.key as String
+                        val rideKey = ds.child("rideKey").value as String
+                        val passengerID = ds.child("passengerID").value as String
+                        val message = ds.child("message").value as String
+
+                        requestResponsesList = requestResponsesList + listOf(
+                            RequestResponse(
+                                passengerID,
+                                rideKey,
+                                message,
+                                requestResponseKey
+                            )
+                        )
+                    }
+                }
+                recyclerView.adapter = RequestResponseAdapter(requestResponsesList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(ContentValues.TAG, "onCancelled", error.toException())
+            }
+        })
+    }
+
     private fun getRequests(){
 
-        requetsList = emptyList()
+        requestsList = emptyList()
 
         mListener = databaseRef.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                requetsList = emptyList()
+                requestsList = emptyList()
                 for (ds: DataSnapshot in snapshot.children){
                     if (userId == ds.child("driverID").value as String){
                         val requestKey = ds.key as String
@@ -80,7 +127,7 @@ class NotificationsFragment : Fragment() {
                         val passengerName = ds.child("passengerName").value as String
                         val passengerNumber = ds.child("passengerNumber").value as String
 
-                        requetsList = requetsList + listOf(
+                        requestsList = requestsList + listOf(
                             RideRequest(
                                 rideKey,
                                 passengerID,
@@ -93,7 +140,7 @@ class NotificationsFragment : Fragment() {
                     }
                 }
 
-                recyclerView.adapter = NotificationAdapter(requetsList)
+                recyclerView.adapter = NotificationAdapter(requestsList)
 
             }
 
@@ -105,10 +152,18 @@ class NotificationsFragment : Fragment() {
 
     }
 
+    private fun removeListener(){
+        if(IsDriver.isDriver == true){
+            databaseRef.removeEventListener(mListener)
+        } else {
+            databaseRefResponse.removeEventListener(mListener)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
 
-        databaseRef.removeEventListener(mListener)
+        removeListener()
     }
 }

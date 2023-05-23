@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.tcc.fgapool.models.RequestResponse
 import com.tcc.fgapool.models.RideRequest
 
 class NotificationAdapter(private val dataSet: List<RideRequest>) :
@@ -59,11 +60,21 @@ class NotificationAdapter(private val dataSet: List<RideRequest>) :
 
             acceptButton.setOnClickListener {
                 acceptRequest(view)
+                sendResponseToPassenger("Sua solicitação foi aceita!")
             }
 
             rejectButton.setOnClickListener {
                 deleteRequest()
+                sendResponseToPassenger("Sua solicitação foi recusada")
             }
+        }
+
+        private fun sendResponseToPassenger(msg: String){
+            val database = Firebase.database
+            val databaseRef = database.getReference("request_response/").push()
+            val requestResponse = RequestResponse(passengerID, rideKey, msg)
+            databaseRef.setValue(requestResponse)
+
         }
 
         private fun deleteRequest(){
