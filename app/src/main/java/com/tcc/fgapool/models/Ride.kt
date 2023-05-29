@@ -18,7 +18,8 @@ data class Ride(
     val passenger1: String? = null,
     val passenger2: String? = null,
     val passenger3: String? = null,
-    val passenger4: String? = null
+    val passenger4: String? = null,
+    val status: String? = null
 ): Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -30,6 +31,7 @@ data class Ride(
         parcel.readString(),
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
         parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -55,6 +57,7 @@ data class Ride(
         parcel.writeString(passenger2)
         parcel.writeString(passenger3)
         parcel.writeString(passenger4)
+        parcel.writeString(status)
     }
 
     override fun describeContents(): Int {

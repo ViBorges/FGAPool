@@ -130,6 +130,7 @@ class RidesFragment : Fragment() {
                             val passenger2 = ds.child("passenger2").value as String?
                             val passenger3 = ds.child("passenger3").value as String?
                             val passenger4 = ds.child("passenger4").value as String?
+                            val status = ds.child("status").value as String?
 
                             rideList = rideList + listOf(
                                 Ride(
@@ -147,7 +148,8 @@ class RidesFragment : Fragment() {
                                     passenger1,
                                     passenger2,
                                     passenger3,
-                                    passenger4
+                                    passenger4,
+                                    status
                                 )
                             )
                         }
@@ -167,6 +169,7 @@ class RidesFragment : Fragment() {
                         val passenger2 = ds.child("passenger2").value as String?
                         val passenger3 = ds.child("passenger3").value as String?
                         val passenger4 = ds.child("passenger4").value as String?
+                        val status = ds.child("status").value as String?
 
                         rideList = rideList + listOf(
                             Ride(
@@ -184,7 +187,8 @@ class RidesFragment : Fragment() {
                                 passenger1,
                                 passenger2,
                                 passenger3,
-                                passenger4
+                                passenger4,
+                                status
                             )
                         )
                     }

@@ -89,7 +89,7 @@ class NotificationAdapter(private val dataSet: List<RideRequest>) :
             databaseRef.addListenerForSingleValueEvent(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     for (i in 1..4){
-                        if (!snapshot.child("passenger$i").exists()){
+                        if (snapshot.child("passenger$i").value as String == "null"){
                             databaseRef.child("passenger$i").setValue(passengerID)
                                 .addOnSuccessListener {
                                     Toast.makeText(

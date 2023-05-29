@@ -33,6 +33,11 @@ class EditRideActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
     private lateinit var databaseRef: DatabaseReference
     private lateinit var uid: String
     private lateinit var driverName: String
+    private lateinit var status: String
+    private lateinit var passenger1: String
+    private lateinit var passenger2: String
+    private lateinit var passenger3: String
+    private lateinit var passenger4: String
 
     private lateinit var rideId: String
 
@@ -69,6 +74,12 @@ class EditRideActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
             rideId = mListItem.rideKey.toString()
             driverName = mListItem.driverName.toString()
             uid = mListItem.userId.toString()
+            status = mListItem.status.toString()
+            passenger1 = mListItem.passenger1.toString()
+            passenger2 = mListItem.passenger2.toString()
+            passenger3 = mListItem.passenger3.toString()
+            passenger4 = mListItem.passenger4.toString()
+
             if (sameSexPassengers == null)
                 sameSexPassengers = mListItem.sameSexPassengers
         }
@@ -147,7 +158,7 @@ class EditRideActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
                 sameSexPassengers?.let { it1 ->
                     updateRide(null, originEditText.text.toString(), destinationEditText.text.toString(),
                         routeEditText.text.toString(), dateEditText.text.toString(), timeEditText.text.toString(),
-                        seatsEditText.text.toString(), it1, true, uid, driverName)
+                        seatsEditText.text.toString(), it1, true, uid, driverName, status)
                 }
             }
         }
@@ -185,7 +196,8 @@ class EditRideActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
         sameSexPassengers: Boolean,
         isActive: Boolean,
         userId: String,
-        driverName: String
+        driverName: String,
+        status: String
     ) {
 
         val ride = Ride(
@@ -199,7 +211,12 @@ class EditRideActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener
             sameSexPassengers,
             isActive,
             userId,
-            driverName
+            driverName,
+            passenger1,
+            passenger2,
+            passenger3,
+            passenger4,
+            status
         )
 
         databaseRef.setValue(ride)

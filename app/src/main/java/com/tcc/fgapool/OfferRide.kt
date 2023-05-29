@@ -130,7 +130,7 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             } else {
                 writeNewRide(null, originEditText.text.toString(), destinationEditText.text.toString(),
                 routeEditText.text.toString(), dateEditText.text.toString(), timeEditText.text.toString(),
-                seatsEditText.text.toString(), sameSexPassengers, true, uid, driverName)
+                seatsEditText.text.toString(), sameSexPassengers, true, uid, driverName, "open")
             }
         }
     }
@@ -167,7 +167,8 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         sameSexPassengers: Boolean,
         isActive: Boolean,
         userId: String,
-        driverName: String
+        driverName: String,
+        status: String
     ) {
 
         val ride = Ride(
@@ -181,7 +182,12 @@ class OfferRide : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
             sameSexPassengers,
             isActive,
             userId,
-            driverName
+            driverName,
+            "null",
+            "null",
+            "null",
+            "null",
+            status
         )
 
         databaseRef.setValue(ride)

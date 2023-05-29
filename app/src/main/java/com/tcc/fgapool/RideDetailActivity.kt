@@ -237,7 +237,7 @@ class RideDetailActivity : AppCompatActivity() {
         val database = Firebase.database
         val databaseRef = database.getReference("rides/").child(rideKey)
 
-        databaseRef.child("passenger$passenger").removeValue().addOnSuccessListener {
+        databaseRef.child("passenger$passenger").setValue("null").addOnSuccessListener {
             updateSeats()
             requestRideButton(rideRequestButton)
             binding.carDetailCard.visibility = GONE
@@ -357,9 +357,16 @@ class RideDetailActivity : AppCompatActivity() {
 
     private fun requestButtonBehavior(button: MaterialButton, counter: Int) {
         if (driverId == userId) {
-            changeButtonStyle(button, "Iniciar", R.color.grey)
-            button.setOnClickListener {
-                Toast.makeText(this, "Não implementado", Toast.LENGTH_SHORT).show()
+            if (passenger1 == "null" && passenger2 == "null" && passenger3 == "null" && passenger4 == "null"){
+                changeButtonStyle(button, "Iniciar", R.color.grey)
+                button.setOnClickListener {
+                    Toast.makeText(this, "Não há passageiros para iniciar a corrida!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                changeButtonStyle(button, "Iniciar", R.color.theme_color_light)
+                button.setOnClickListener {
+                    Toast.makeText(this, "Corrida iniciada", Toast.LENGTH_SHORT).show()
+                }
             }
         } else if (counter == 0) {
             requestRideButton(button)
