@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.GONE
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -32,6 +33,7 @@ class OfferRideAdapter(private var dataSet: List<Ride>) : Adapter<OfferRideAdapt
         val driverName: TextView
         val seatsAvailable: TextView
         val rideItemMenu: ImageView
+        lateinit var status: String
 
         init {
             // Define click listener for the ViewHolder's View.
@@ -51,7 +53,11 @@ class OfferRideAdapter(private var dataSet: List<Ride>) : Adapter<OfferRideAdapt
             }
         }
 
-
+        private fun hidePopupMenu(status: String){
+            if (status == "onGoing" || status == "finished"){
+                rideItemMenu.visibility = GONE
+            }
+        }
 
         private fun popupMenu(v: View?) {
             val popupMenu = PopupMenu(v?.context, v)
@@ -137,9 +143,12 @@ class OfferRideAdapter(private var dataSet: List<Ride>) : Adapter<OfferRideAdapt
         viewHolder.time.text = dataSet[position].time
         viewHolder.driverName.text = dataSet[position].driverName
         viewHolder.seatsAvailable.text = dataSet[position].seatsAvailable
+        viewHolder.status = dataSet[position].status.toString()
 
         if (IsDriver.isDriver == false) {
             viewHolder.rideItemMenu.isVisible = false
+        } else if (viewHolder.status == "onGoing" || viewHolder.status == "finished"){
+            viewHolder.rideItemMenu.visibility = GONE
         }
     }
 

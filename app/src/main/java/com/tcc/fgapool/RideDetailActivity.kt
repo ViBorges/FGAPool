@@ -46,6 +46,7 @@ class RideDetailActivity : AppCompatActivity() {
     private val passengersPicUrl = Vector<String>()
     private val passengersName = Vector<String>()
     private val passengers = Vector<String>()
+    private lateinit var status: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +75,7 @@ class RideDetailActivity : AppCompatActivity() {
             passenger2 = mListItem.passenger2.toString()
             passenger3 = mListItem.passenger3.toString()
             passenger4 = mListItem.passenger4.toString()
+            status = mListItem.status.toString()
         }
 
         //Firebase user reference
@@ -299,10 +301,16 @@ class RideDetailActivity : AppCompatActivity() {
 
     private fun checkIfPassenger(button: MaterialButton) {
         if (userId == passenger1 || userId == passenger2 || userId == passenger3 || userId == passenger4) run {
-            changeButtonStyle(button, "Sair da carona", R.color.red)
-            isPassenger = true
-            button.setOnClickListener {
-                leaveRide()
+            if (status == "onGoing") {
+                onGoingRide(button)
+            } else if (status == "finished") {
+                finishedRide(button)
+            } else {
+                changeButtonStyle(button, "Sair da carona", R.color.red)
+                isPassenger = true
+                button.setOnClickListener {
+                    leaveRide()
+                }
             }
         } else {
             checkRequest(userId, rideKey, rideRequestButton)
@@ -357,21 +365,74 @@ class RideDetailActivity : AppCompatActivity() {
 
     private fun requestButtonBehavior(button: MaterialButton, counter: Int) {
         if (driverId == userId) {
-            if (passenger1 == "null" && passenger2 == "null" && passenger3 == "null" && passenger4 == "null"){
-                changeButtonStyle(button, "Iniciar", R.color.grey)
-                button.setOnClickListener {
-                    Toast.makeText(this, "Não há passageiros para iniciar a corrida!", Toast.LENGTH_SHORT).show()
+            if (status == "open") {
+                if (passenger1 == "null" && passenger2 == "null" && passenger3 == "null" && passenger4 == "null") {
+                    changeButtonStyle(button, "Iniciar", R.color.grey)
+                    button.setOnClickListener {
+                        Toast.makeText(
+                            this,
+                            "Não há passageiros para iniciar a corrida!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else {
+                    changeButtonStyle(button, "Iniciar", R.color.theme_color_light)
+                    button.setOnClickListener {
+                        setOnGoingRideStatus()
+                        endRide(button)
+                    }
                 }
+            } else if (status == "onGoing") {
+                endRide(button)
             } else {
-                changeButtonStyle(button, "Iniciar", R.color.theme_color_light)
-                button.setOnClickListener {
-                    Toast.makeText(this, "Corrida iniciada", Toast.LENGTH_SHORT).show()
-                }
+                finishedRide(button)
             }
+        } else if (status == "onGoing" || status == "finished") {
+            onGoingRide(button)
         } else if (counter == 0) {
             requestRideButton(button)
         } else {
             cancelRequestButton(button)
+        }
+    }
+
+    private fun onGoingRide(button: MaterialButton) {
+        changeButtonStyle(button, "Corrida em andamento", R.color.red)
+        button.setOnClickListener {
+            Toast.makeText(
+                this,
+                "Não é possível fazer um requisição em uma corrida em andamento!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun finishedRide(button: MaterialButton) {
+        changeButtonStyle(button, "Corrida finalizada", R.color.grey)
+        button.isClickable = false
+    }
+
+    private fun endRide(button: MaterialButton) {
+        changeButtonStyle(button, "Finalizar corrida", R.color.red)
+        button.setOnClickListener {
+            setFinishedRideStatus()
+            finishedRide(button)
+        }
+    }
+
+    private fun setFinishedRideStatus() {
+        val database: FirebaseDatabase = Firebase.database
+        val databaseRef: DatabaseReference = database.getReference("rides/").child(rideKey)
+        databaseRef.child("status").setValue("finished").addOnSuccessListener {
+            Toast.makeText(this, "Corrida finalizada!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setOnGoingRideStatus() {
+        val database: FirebaseDatabase = Firebase.database
+        val databaseRef: DatabaseReference = database.getReference("rides/").child(rideKey)
+        databaseRef.child("status").setValue("onGoing").addOnSuccessListener {
+            Toast.makeText(this, "Corrida iniciada", Toast.LENGTH_SHORT).show()
         }
     }
 
