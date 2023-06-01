@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +27,7 @@ import com.tcc.fgapool.databinding.FragmentRidesBinding
 import com.tcc.fgapool.models.Ride
 
 
-class RidesFragment : Fragment() {
+class RidesFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     private lateinit var ridesViewModel: RidesViewModel
     private var _binding: FragmentRidesBinding? = null
@@ -75,14 +77,23 @@ class RidesFragment : Fragment() {
         searchRide = binding.searchRides
         searchRide.clearFocus()
 
-
         if (IsDriver.isDriver == false) binding.fab.isVisible = false
 
         binding.fab.setOnClickListener {
             updateUI()
         }
 
+        showMyRidesButton()
+        binding.myRidesBtn.setOnCheckedChangeListener(this)
+
         return root
+    }
+
+    private fun showMyRidesButton() {
+        if (IsDriver.isDriver == false) {
+            binding.myRidesBtn.visibility = VISIBLE
+            binding.divider.visibility = GONE
+        }
     }
 
     private fun filteredList(newText: String?) {
@@ -113,7 +124,13 @@ class RidesFragment : Fragment() {
                 rideList = emptyList()
                 for (ds: DataSnapshot in snapshot.children) {
                     val userId = ds.child("userId").value as String
-                    if (IsDriver.isDriver == true) {
+                    val pass1 = ds.child("passenger1").value.toString()
+                    val pass2 = ds.child("passenger2").value.toString()
+                    val pass3 = ds.child("passenger3").value.toString()
+                    val pass4 = ds.child("passenger4").value.toString()
+                    val rideState = ds.child("status").value.toString()
+                    val seats = ds.child("seatsAvailable").value.toString()
+                    if (IsDriver.isDriver == true && rideState != "finished") {
                         if (userId == uid) {
                             val rideKey = ds.key as String
                             val userKey = ds.child("userId").value as String
@@ -153,44 +170,90 @@ class RidesFragment : Fragment() {
                                 )
                             )
                         }
-                    } else {
-                        val rideKey = ds.key as String
-                        val userKey = ds.child("userId").value as String
-                        val route = ds.child("route").value as String
-                        val sameSex = ds.child("sameSexPassengers").value as Boolean
-                        val isActive = ds.child("active").value as Boolean
-                        origin = ds.child("origin").value as String
-                        destination = ds.child("destination").value as String
-                        date = ds.child("date").value as String
-                        time = ds.child("time").value as String
-                        seatsAvailable = ds.child("seatsAvailable").value as String
-                        driverName = ds.child("driverName").value as String
-                        val passenger1 = ds.child("passenger1").value as String?
-                        val passenger2 = ds.child("passenger2").value as String?
-                        val passenger3 = ds.child("passenger3").value as String?
-                        val passenger4 = ds.child("passenger4").value as String?
-                        val status = ds.child("status").value as String?
+                    } else if (!binding.myRidesBtn.isChecked) {
+                        if (seats != "0") {
+                            if (rideState != "finished") {
+                                val rideKey = ds.key as String
+                                val userKey = ds.child("userId").value as String
+                                val route = ds.child("route").value as String
+                                val sameSex = ds.child("sameSexPassengers").value as Boolean
+                                val isActive = ds.child("active").value as Boolean
+                                origin = ds.child("origin").value as String
+                                destination = ds.child("destination").value as String
+                                date = ds.child("date").value as String
+                                time = ds.child("time").value as String
+                                seatsAvailable = ds.child("seatsAvailable").value as String
+                                driverName = ds.child("driverName").value as String
+                                val passenger1 = ds.child("passenger1").value as String?
+                                val passenger2 = ds.child("passenger2").value as String?
+                                val passenger3 = ds.child("passenger3").value as String?
+                                val passenger4 = ds.child("passenger4").value as String?
+                                val status = ds.child("status").value as String?
 
-                        rideList = rideList + listOf(
-                            Ride(
-                                rideKey,
-                                origin,
-                                destination,
-                                route,
-                                date,
-                                time,
-                                seatsAvailable,
-                                sameSex,
-                                isActive,
-                                userKey,
-                                driverName,
-                                passenger1,
-                                passenger2,
-                                passenger3,
-                                passenger4,
-                                status
-                            )
-                        )
+                                rideList = rideList + listOf(
+                                    Ride(
+                                        rideKey,
+                                        origin,
+                                        destination,
+                                        route,
+                                        date,
+                                        time,
+                                        seatsAvailable,
+                                        sameSex,
+                                        isActive,
+                                        userKey,
+                                        driverName,
+                                        passenger1,
+                                        passenger2,
+                                        passenger3,
+                                        passenger4,
+                                        status
+                                    )
+                                )
+                            }
+                        }
+                    } else {
+                        if (uid == pass1 || uid == pass2 || uid == pass3 || uid == pass4) {
+                            if (rideState != "finished") {
+                                val rideKey = ds.key as String
+                                val userKey = ds.child("userId").value as String
+                                val route = ds.child("route").value as String
+                                val sameSex = ds.child("sameSexPassengers").value as Boolean
+                                val isActive = ds.child("active").value as Boolean
+                                origin = ds.child("origin").value as String
+                                destination = ds.child("destination").value as String
+                                date = ds.child("date").value as String
+                                time = ds.child("time").value as String
+                                seatsAvailable = ds.child("seatsAvailable").value as String
+                                driverName = ds.child("driverName").value as String
+                                val passenger1 = ds.child("passenger1").value as String?
+                                val passenger2 = ds.child("passenger2").value as String?
+                                val passenger3 = ds.child("passenger3").value as String?
+                                val passenger4 = ds.child("passenger4").value as String?
+                                val status = ds.child("status").value as String?
+
+                                rideList = rideList + listOf(
+                                    Ride(
+                                        rideKey,
+                                        origin,
+                                        destination,
+                                        route,
+                                        date,
+                                        time,
+                                        seatsAvailable,
+                                        sameSex,
+                                        isActive,
+                                        userKey,
+                                        driverName,
+                                        passenger1,
+                                        passenger2,
+                                        passenger3,
+                                        passenger4,
+                                        status
+                                    )
+                                )
+                            }
+                        }
                     }
 
                 }
@@ -215,7 +278,7 @@ class RidesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        searchRide.setQuery("", false); // clear the text
+        searchRide.setQuery("", false) // clear the text
         //searchRide.isIconified = true;
 
         searchRide.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
@@ -235,5 +298,12 @@ class RidesFragment : Fragment() {
     private fun updateUI() {
         val intent = Intent(context, OfferRide::class.java)
         startActivity(intent)
+    }
+
+    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+        if (isChecked)
+            recoverRideData()
+        else
+            recoverRideData()
     }
 }

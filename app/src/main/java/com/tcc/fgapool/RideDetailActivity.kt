@@ -398,13 +398,7 @@ class RideDetailActivity : AppCompatActivity() {
 
     private fun onGoingRide(button: MaterialButton) {
         changeButtonStyle(button, "Corrida em andamento", R.color.red)
-        button.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Não é possível fazer um requisição em uma corrida em andamento!",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        button.isClickable = false
     }
 
     private fun finishedRide(button: MaterialButton) {
