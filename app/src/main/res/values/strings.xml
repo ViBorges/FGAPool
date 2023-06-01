@@ -18,4 +18,5 @@
     <string name="add">add</string>
     <string name="edit">Editar</string>
     <string name="delete">Deletar</string>
+    <string name="profile_picture">profile picture</string>
 </resources>

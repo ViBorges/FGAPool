@@ -1,7 +1,9 @@
 package com.tcc.fgapool.ui.profile
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,14 +18,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import com.tcc.fgapool.BottomNavigation
 import com.tcc.fgapool.GoogleAuthLogin
 import com.tcc.fgapool.R
 import com.tcc.fgapool.databinding.FragmentProfileBinding
-
-//import com.tcc.fgapool.databinding.FragmentProfileBinding
+import com.tcc.fgapool.utils.CircleTransformation
 
 class ProfileFragment : Fragment() {
 
@@ -32,6 +37,8 @@ class ProfileFragment : Fragment() {
 
     private lateinit var profileViewModel: ProfileViewModel
     private var _binding: FragmentProfileBinding? = null
+
+    private lateinit var currentFirebaseUser: FirebaseUser
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -43,15 +50,10 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         profileViewModel =
-            ViewModelProvider(this).get(ProfileViewModel::class.java)
+            ViewModelProvider(this)[ProfileViewModel::class.java]
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        profileViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("577000861442-eok56j6815m6fjek1kufvpmj6bafq0ki.apps.googleusercontent.com")
@@ -65,7 +67,45 @@ class ProfileFragment : Fragment() {
             signOut()
         }
 
+        currentFirebaseUser = FirebaseAuth.getInstance().currentUser!!
+
+        setProfilePhoto(currentFirebaseUser.photoUrl.toString())
+        getUserData()
+
         return root
+    }
+
+    private fun getUserData(){
+        val database: FirebaseDatabase = Firebase.database
+        val databaseRef: DatabaseReference = database.getReference("signup_info/").child(currentFirebaseUser.uid)
+        databaseRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val course = snapshot.child("course").value as String
+                val isDriver = snapshot.child("isDriver").value as Boolean
+
+                setUserData(course, isDriver)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(ContentValues.TAG, "onCancelled", error.toException())
+            }
+
+        })
+    }
+
+    private fun setUserData(course: String, isDriver: Boolean){
+        binding.profileName.text = currentFirebaseUser.displayName
+        binding.profileCourse.text = course
+        if (isDriver){
+            binding.role.text = "Motorista"
+        } else {
+            binding.role.text = "Passageiro"
+        }
+    }
+
+    private fun setProfilePhoto(driverPhotoURL: String) {
+        Picasso.get().load(driverPhotoURL).transform(CircleTransformation())
+            .into(binding.profilePhoto)
     }
 
     private fun signOut(){
