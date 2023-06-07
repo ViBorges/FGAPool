@@ -72,6 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:visibility="gone"
                 android:background="@drawable/ic_verified"
                 app:layout_constraintBottom_toTopOf="@+id/driver_course"
                 app:layout_constraintStart_toEndOf="@+id/driver_name" />

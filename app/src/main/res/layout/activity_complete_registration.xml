@@ -5,16 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="#055429"
+
     tools:context=".CompleteRegistration">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:cardElevation="5dp"
+        android:layout_marginTop="60dp"
         app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -33,9 +35,9 @@
                 android:layout_marginTop="80dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="5dp"
-                app:helperText="Ex:150151229"
                 android:hint="Matrícula"
                 app:endIconMode="clear_text"
+                app:helperText="Ex:150151229"
                 app:startIconDrawable="@drawable/ic_vpn_key">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -72,8 +74,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Telefone"
-                app:helperText="Ex: 61982319894"
                 app:endIconMode="clear_text"
+                app:helperText="Ex: 61982319894"
                 app:startIconDrawable="@drawable/ic_phone">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -104,9 +106,9 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:hint="Placa"
-                app:helperText="Ex: QQJ7899"
                 android:visibility="gone"
                 app:endIconMode="clear_text"
+                app:helperText="Ex: QQJ7899"
                 app:startIconDrawable="@drawable/ic_baseline_directions_car_24"
                 tools:visibility="visible">
 
@@ -174,7 +176,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:alpha="100"
-        android:elevation="2dp"
+        android:elevation="6dp"
         android:padding="1dp"
         android:src="@drawable/ic_baseline_account_circle_24"
         app:layout_constraintBottom_toTopOf="@+id/cardViewForm"
@@ -187,8 +189,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:elevation="2dp"
-        android:textColor="#04391C"
+        android:elevation="6dp"
         android:text="Nome Sobrenome"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -200,15 +201,15 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSend"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:text="Cadastrar"
-        app:cornerRadius="100dp"
-        android:padding="12dp"
-        android:textColor="#04391C"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/theme_color_light"
+        android:padding="15dp"
+        android:elevation="6dp"
+        android:text="Cadastrar"
+        app:cornerRadius="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
