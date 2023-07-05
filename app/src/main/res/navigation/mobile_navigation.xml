@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.tcc.fgapool.ui.profile.ProfileFragment"
+        android:name="com.tcc.fgapool.fragments.ProfileFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.tcc.fgapool.ui.rides.RidesFragment"
+        android:name="com.tcc.fgapool.fragments.RidesFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_rides" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.tcc.fgapool.ui.notifications.NotificationsFragment"
+        android:name="com.tcc.fgapool.fragments.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

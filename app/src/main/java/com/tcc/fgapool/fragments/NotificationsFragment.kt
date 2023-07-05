@@ -1,4 +1,4 @@
-package com.tcc.fgapool.ui.notifications
+package com.tcc.fgapool.fragments
 
 import android.content.ContentValues
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -28,7 +27,6 @@ import com.tcc.fgapool.models.RequestResponse
 
 class NotificationsFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
     private var _binding: FragmentNotificationsBinding? = null
 
     private lateinit var recyclerView: RecyclerView
@@ -48,7 +46,6 @@ class NotificationsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        notificationsViewModel = ViewModelProvider(this)[NotificationsViewModel::class.java]
 
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root

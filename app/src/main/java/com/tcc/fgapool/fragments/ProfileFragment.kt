@@ -1,4 +1,4 @@
-package com.tcc.fgapool.ui.profile
+package com.tcc.fgapool.fragments
 
 import android.content.ContentValues
 import android.content.Intent
@@ -7,12 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -24,9 +20,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
-import com.tcc.fgapool.BottomNavigation
 import com.tcc.fgapool.GoogleAuthLogin
-import com.tcc.fgapool.R
 import com.tcc.fgapool.databinding.FragmentProfileBinding
 import com.tcc.fgapool.utils.CircleTransformation
 
@@ -35,7 +29,6 @@ class ProfileFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    private lateinit var profileViewModel: ProfileViewModel
     private var _binding: FragmentProfileBinding? = null
 
     private lateinit var currentFirebaseUser: FirebaseUser
@@ -49,8 +42,6 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        profileViewModel =
-            ViewModelProvider(this)[ProfileViewModel::class.java]
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root

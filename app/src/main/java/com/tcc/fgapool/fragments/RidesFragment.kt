@@ -1,4 +1,4 @@
-package com.tcc.fgapool.ui.rides
+package com.tcc.fgapool.fragments
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -13,7 +13,6 @@ import android.widget.CompoundButton
 import android.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -29,7 +28,6 @@ import com.tcc.fgapool.models.Ride
 
 class RidesFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
-    private lateinit var ridesViewModel: RidesViewModel
     private var _binding: FragmentRidesBinding? = null
 
     // This property is only valid between onCreateView and
@@ -55,7 +53,6 @@ class RidesFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        ridesViewModel = ViewModelProvider(this)[RidesViewModel::class.java]
 
         _binding = FragmentRidesBinding.inflate(inflater, container, false)
         val root: View = binding.root
