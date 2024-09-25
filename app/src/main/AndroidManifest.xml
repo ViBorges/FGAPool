@@ -1,23 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tcc.fgapool">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_gama"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_gama_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FGAPool">
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".RideDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FGAPool.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".EditRideActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FGAPool.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <activity
+            android:name=".SplashScreen"
+            android:exported="true"
+            android:theme="@style/Theme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".OfferRide"
+            android:exported="true"
+            android:theme="@style/Theme.FGAPool.NoActionBar" />
+        <activity
+            android:name=".CompleteRegistration"
+            android:exported="true"
+            android:theme="@style/Theme.Registration" />
+        <activity
+            android:name=".BottomNavigation"
+            android:exported="true"
+            android:label="@string/title_activity_bottom_navigation" />
+        <activity
+            android:name=".GoogleAuthLogin"
+            android:exported="true"
+            android:theme="@style/Theme.FGAPool.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FGAPool.NoActionBar" />
     </application>
 
 </manifest>
